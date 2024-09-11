@@ -42,13 +42,13 @@
                                     {{-- <a href="{{ url('dashboard') }}" class="btn btn-primary w-100">Login</a> --}}
                                 </div>
                             </form>
-                            <div class="login-or">
+                            {{-- <div class="login-or">
                                 <span class="or-line"></span>
                                 <span class="span-or">or</span>
                             </div>
                             <div class="text-center dont-have">Don't have an account? <a
                                     href="{{ route('register-user') }}">Registration</a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
