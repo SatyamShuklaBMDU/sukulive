@@ -8,14 +8,14 @@
                 <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}"><i class="fe fe-home"></i> <span>Dashboard</span></a>
                 </li>
+                <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
+                    <a href="{{ route('user.index') }}"><i class="fe fe-user-plus"></i> <span>Users</span></a>
+                </li>
                 {{-- <li class="">
                     <a href="appointment-list.html"><i class="fe fe-layout"></i> <span>Appointments</span></a>
                 </li>
                 <li>
                     <a href="specialities.html"><i class="fe fe-users"></i> <span>Specialities</span></a>
-                </li>
-                <li>
-                    <a href="doctor-list.html"><i class="fe fe-user-plus"></i> <span>Doctors</span></a>
                 </li>
                 <li>
                     <a href="patient-list.html"><i class="fe fe-user"></i> <span>Patients</span></a>

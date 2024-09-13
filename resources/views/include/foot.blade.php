@@ -9,3 +9,4 @@
 <script src="{{asset('assets/plugins/raphael/raphael.min.js')}}" type="de4b72342cdcd54f58d3db2e-text/javascript"></script>
 <script src="{{asset('assets/plugins/morris/morris.min.js')}}" type="de4b72342cdcd54f58d3db2e-text/javascript"></script>
 <script src="{{asset('assets/js/chart.morris.js')}}" type="de4b72342cdcd54f58d3db2e-text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -14,4 +14,12 @@ class Customer extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
 
     protected $guarded = [];
+
+    public static function generateUniqueCode()
+    {
+        do {
+            $uniqueNo = 'SUKU' . '' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        } while (self::where('customer_id', $uniqueNo)->exists());
+        return $uniqueNo;
+    }
 }

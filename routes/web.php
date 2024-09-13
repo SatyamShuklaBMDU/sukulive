@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,3 +29,6 @@ Route::post('custom-login', [LoginController::class, 'customLogin'])->name('logi
 Route::get('registration', [LoginController::class, 'registration'])->name('register-user');
 Route::post('custom-registration', [LoginController::class, 'customRegistration'])->name('register.custom'); 
 Route::get('signout', [LoginController::class, 'signOut'])->name('signout');
+
+Route::get('user',[UserController::class,'index'])->name('user.index');
+Route::post('/update-status/{id}', [UserController::class, 'updateStatus'])->name('update.status');
