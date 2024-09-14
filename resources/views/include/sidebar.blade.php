@@ -11,9 +11,11 @@
                 <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
                     <a href="{{ route('user.index') }}"><i class="fe fe-user-plus"></i> <span>Users</span></a>
                 </li>
-                {{-- <li class="">
-                    <a href="appointment-list.html"><i class="fe fe-layout"></i> <span>Appointments</span></a>
+                <li class="{{ request()->routeIs('notifications.index') ? 'active' : '' }}">
+                    <a href="{{ route('notifications.index') }}"><i class="fe fe-bell"></i>
+                        <span>Notification</span></a>
                 </li>
+                {{--
                 <li>
                     <a href="specialities.html"><i class="fe fe-users"></i> <span>Specialities</span></a>
                 </li>

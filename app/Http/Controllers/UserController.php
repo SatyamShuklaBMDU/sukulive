@@ -26,4 +26,16 @@ class UserController extends Controller
             return response()->json(['success' => false, 'message' => 'Failed to update status.']);
         }
     }
+
+    public function filterData(Request $request)
+    {
+        $request->validate([
+            'start' => 'required|date',
+            'end' => 'required|date|after_or_equal:start',
+        ]);
+        $startDate = $request->start;
+        $endDate = $request->end;
+        $users = Customer::whereBetween('created_at', [$startDate, $endDate])->latest()->get();
+        return view("users.index", ['start' => $startDate, 'end' => $endDate], compact("users"));
+    }
 }

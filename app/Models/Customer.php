@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Overtrue\LaravelFollow\Traits\Followable;
+use Overtrue\LaravelFollow\Traits\Follower;
+use Overtrue\LaravelLike\Traits\Liker;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-
-class Customer extends Authenticatable
+class Customer extends Authenticatable implements HasMedia
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, Follower, Followable, InteractsWithMedia, Liker;
 
     protected $guarded = [];
 

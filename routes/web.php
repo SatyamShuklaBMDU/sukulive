@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,3 +33,11 @@ Route::get('signout', [LoginController::class, 'signOut'])->name('signout');
 
 Route::get('user',[UserController::class,'index'])->name('user.index');
 Route::post('/update-status/{id}', [UserController::class, 'updateStatus'])->name('update.status');
+Route::post('/filter-user', [UserController::class, 'filterdata'])->name('filter-user');
+
+Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::post('notifications', [NotificationController::class, 'store'])->name('notifications.store');
+Route::get('notifications/{id}/edit', [NotificationController::class, 'edit'])->name('notifications.edit');
+Route::put('notifications/{id}', [NotificationController::class, 'update'])->name('notifications.update');
+Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+Route::post('/update-notification/{id}', [NotificationController::class, 'updateStatus'])->name('update.notification.status');
