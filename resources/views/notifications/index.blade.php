@@ -67,7 +67,7 @@
                                     <thead>
                                         <tr class="text-center">
                                             <th>S.No</th>
-                                            <th>For</th>
+                                            {{-- <th>For</th> --}}
                                             <th>Title</th>
                                             <th>Message</th>
                                             <th>Account Status</th>
@@ -78,7 +78,7 @@
                                         @foreach ($notifications as $notification)
                                             <tr class="text-center">
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $notification->for }}</td>
+                                                {{-- <td>{{ $notification->for }}</td> --}}
                                                 <td>{{ $notification->title }}</td>
                                                 <td>{{ $notification->message }}</td>
                                                 <td>
@@ -118,10 +118,10 @@
                 </div>
                 <form id="addNotificationForm">
                     <div class="modal-body">
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="for" class="col-form-label">For:</label>
                             <input type="text" class="form-control" id="for" name="for">
-                        </div>
+                        </div> --}}
                         <div class="mb-3">
                             <label for="title" class="col-form-label">Ttile:</label>
                             <input type="text" class="form-control" id="title" name="title">
@@ -149,10 +149,10 @@
                 <form id="notificationEditForm">
                     <div class="modal-body">
                         <input type="hidden" name="id" id="notid">
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="for" class="col-form-label">For:</label>
                             <input type="text" class="form-control" id="editfor" name="for">
-                        </div>
+                        </div> --}}
                         <div class="mb-3">
                             <label for="title" class="col-form-label">Ttile:</label>
                             <input type="text" class="form-control" id="edittitle" name="title">

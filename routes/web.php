@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PlansController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,3 +42,20 @@ Route::get('notifications/{id}/edit', [NotificationController::class, 'edit'])->
 Route::put('notifications/{id}', [NotificationController::class, 'update'])->name('notifications.update');
 Route::delete('notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 Route::post('/update-notification/{id}', [NotificationController::class, 'updateStatus'])->name('update.notification.status');
+
+
+
+//Plans and pricing
+Route::get('plans', [PlansController::class, 'index'])->name('plans.index');
+Route::post('plans', [PlansController::class, 'store'])->name('plans.store');
+Route::get('plans/{id}/edit', [PlansController::class, 'edit'])->name('plans.edit');
+Route::put('plans/{id}', [PlansController::class, 'update'])->name('plans.update');
+Route::delete('plans/{id}', [PlansController::class, 'destroy'])->name('plans.destroy');
+Route::post('/update-plans/{id}', [PlansController::class, 'updateStatus'])->name('update.plans.status');
+
+
+
+
+
+// Route::post('/update-plan/{id}', [UserController::class, 'updatePlan'])->name('
+// update.plan.status');

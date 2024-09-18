@@ -11,6 +11,10 @@
                 <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
                     <a href="{{ route('user.index') }}"><i class="fe fe-user-plus"></i> <span>Users</span></a>
                 </li>
+                <li class="{{ request()->routeIs('plans.index') ? 'active' : '' }}">
+                    <a href="{{ route('plans.index') }}"><i class="fe fe-money" aria-hidden="true"></i>
+                        <span>Plans</span></a>
+                </li>
                 <li class="{{ request()->routeIs('notifications.index') ? 'active' : '' }}">
                     <a href="{{ route('notifications.index') }}"><i class="fe fe-bell"></i>
                         <span>Notification</span></a>

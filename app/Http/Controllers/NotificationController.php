@@ -17,7 +17,7 @@ class NotificationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'for' => 'required|string|max:255',
+            // 'for' => 'required|string|max:255',
             'title' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
@@ -36,7 +36,7 @@ class NotificationController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'for' => 'required|string|max:255',
+            // 'for' => 'required|string|max:255',
             'title' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
