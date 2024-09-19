@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\API\DiamondController;
 use App\Http\Controllers\API\FollowController;
 use App\Http\Controllers\API\LikeController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\PlansController;
 use App\Http\Controllers\API\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,3 +49,11 @@ Route::post('posts/add-comment', [CommentController::class, 'addComment'])->midd
 
 //Notification Api
 Route::post('notifications', [NotificationController::class, 'getNotifications'])->middleware('auth:sanctum');
+
+
+// Plan and Pricing
+Route::get('get-plans', [PlansController::class, 'getPlans'])->middleware('auth:sanctum');
+
+
+//Diamonds
+Route::get('diamonds', [DiamondController::class, 'getDiamonds'])->middleware('auth:sanctum');
