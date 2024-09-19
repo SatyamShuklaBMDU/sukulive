@@ -11,4 +11,6 @@ use Overtrue\LaravelLike\Traits\Likeable;
 class Media extends BaseMedia
 {
     use Likeable, HasComments;
+
+    protected $table = 'media';
 }
