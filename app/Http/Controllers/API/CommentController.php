@@ -25,4 +25,20 @@ class CommentController extends Controller
         $comment = $post->commentAsUser($customer, $request->comment);
         return response()->json(['message' => 'Comment added successfully.', 'comment' => $comment], Response::HTTP_OK);
     }
+
+    public function getComments(Request $request)
+    {
+        $posts = Media::findOrFail($request->post_id);
+        $comments = $posts->comments;
+        return response()->json(['comments' => $comments], Response::HTTP_OK);
+    }
+
+    public function deleteComment(Request $request)
+    {
+        $login = Auth::user();
+        $customer = Customer::findOrFail($login->id);
+        $comment = $customer->comments()->findOrFail($request->comment_id);
+        $comment->delete();
+        return response()->json(['message','Comment delete successfully.'],Response::HTTP_OK);
+    }
 }
