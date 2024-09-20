@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,7 @@ class MessageController extends Controller
     public function sendMessage(Request $request)
     {
         $request->validate([
-            'receiver_id' => 'required|exists:users,id',
+            'receiver_id' => 'required|exists:customers,id',
             'message' => 'required|string|max:500',
         ]);
 
@@ -22,8 +23,10 @@ class MessageController extends Controller
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
         ]);
-        broadcast(new MessageSent($message))->toOthers();
-
+        $client = new Client();
+        $client->post('http://localhost:3000/chatMessage', [
+            'json' => ['message' => $message]
+        ]);
         return response()->json([
             'message' => 'Message sent successfully!',
             'data' => $message,
@@ -35,10 +38,10 @@ class MessageController extends Controller
     {
         $messages = Message::where(function ($query) use ($userId) {
             $query->where('sender_id', Auth::id())
-                  ->where('receiver_id', $userId);
+                ->where('receiver_id', $userId);
         })->orWhere(function ($query) use ($userId) {
             $query->where('sender_id', $userId)
-                  ->where('receiver_id', Auth::id());
+                ->where('receiver_id', Auth::id());
         })->orderBy('created_at', 'asc')->get();
 
         return response()->json([
