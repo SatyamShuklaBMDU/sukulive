@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DiamondController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PlansController;
@@ -52,6 +53,16 @@ Route::get('plans/{id}/edit', [PlansController::class, 'edit'])->name('plans.edi
 Route::put('plans/{id}', [PlansController::class, 'update'])->name('plans.update');
 Route::delete('plans/{id}', [PlansController::class, 'destroy'])->name('plans.destroy');
 Route::post('/update-plans/{id}', [PlansController::class, 'updateStatus'])->name('update.plans.status');
+
+
+//Diamonds
+Route::get('diamonds', [DiamondController::class, 'index'])->name('diamonds.index');
+Route::post('diamonds', [DiamondController::class, 'store'])->name('diamonds.store');
+Route::get('diamonds/{id}/edit', [DiamondController::class, 'edit'])->name('diamonds.edit');
+Route::put('diamonds/{id}', [DiamondController::class, 'update'])->name('diamonds.update');
+Route::delete('diamonds/{id}', [DiamondController::class, 'destroy'])->name('diamonds.destroy');
+Route::post('/update-diamonds/{id}', [DiamondController::class, 'updateStatus'])->name('update.diamonds.status');
+
 
 
 
