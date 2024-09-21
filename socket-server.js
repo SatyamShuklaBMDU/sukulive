@@ -17,7 +17,7 @@ const io = socketIo(server, {
 
 io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
-    io.brodcast.emit("hello","world");
+    // io.brodcast.emit("hello","world");
 
     socket.on('joinRoom', ({ sender_id, receiver_id }) => {
         const room = getRoomName(sender_id, receiver_id);
