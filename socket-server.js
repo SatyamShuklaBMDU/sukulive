@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
         try {
             const data = JSON.parse(dat);
             console.log("Received chatMessage event:", data);
+            io.emit("mess", "data aya hai");
     
             const { room, message_data } = data;
             if (!room || !message_data) {
@@ -38,7 +39,7 @@ io.on("connection", (socket) => {
             }
     
             console.log(`Message received in room ${room}:`, message_data);
-            io.to(room).emit("chatMessage", message_data);
+            // io.to(room).emit("chatMessage", message_data);
         } catch (error) {
             console.error("Error processing chatMessage:", error);
             socket.disconnect(); // Optionally disconnect the socket
