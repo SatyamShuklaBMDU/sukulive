@@ -17,6 +17,7 @@ const io = socketIo(server, {
 
 io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
+    socket.brodcast.emit("mess" , socket.id);
     // io.brodcast.emit("hello","world");
 
     socket.on('joinRoom', ({ sender_id, receiver_id }) => {
@@ -26,8 +27,8 @@ io.on("connection", (socket) => {
     });
     console.log("1");
     socket.on("chatMessage", (dat) => {
-        socket.emit("mess", JSON.stringify({"mess":"hiii"}));
-        // io.brodcast.emit("mess", JSON.stringify({"mess":"hiii"}));
+        
+        io.brodcast.emit("mess", JSON.stringify({"mess":"hiii"}));
         data =  JSON.parse(dat);
 
         console.log("Received chatMessage event:", data);
