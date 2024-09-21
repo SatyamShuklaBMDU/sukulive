@@ -27,27 +27,24 @@ io.on("connection", (socket) => {
     });
     console.log("1");
     socket.on("chatMessage", (dat) => {
-        
-        ;
-        data =  JSON.parse(dat);
-
-        console.log("Received chatMessage event:", data);
-        io.emit("mess", "helo");
-        // io.emit("RecievedMessage",data);
-        if (!data) {
-            console.error("Invalid request data:", data);
-            return;
+        try {
+            const data = JSON.parse(dat);
+            console.log("Received chatMessage event:", data);
+    
+            const { room, message_data } = data;
+            if (!room || !message_data) {
+                console.error("Invalid request data:", data);
+                return;
+            }
+    
+            console.log(`Message received in room ${room}:`, message_data);
+            io.to(room).emit("chatMessage", message_data);
+        } catch (error) {
+            console.error("Error processing chatMessage:", error);
+            socket.disconnect(); // Optionally disconnect the socket
         }
-
-        const { room, message_data } = data;
-        if (!room || !message_data) {
-            console.error("Invalid request data:", data);
-            return;
-        }
-        // io.to(room).emit("chatMessage", message_data);
-        console.log(`Message received in room ${room}:`, message_data);
-        io.to(room).emit("chatMessage", message_data);
     });
+    
 
     socket.on("disconnect", () => {
         console.log("Client disconnected:", socket.id);
@@ -75,3 +72,24 @@ const getRoomName = (sender_id, receiver_id) => {
 };
 const PORT = 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
+// socket.on("chatMessage", (dat) => {
+//     try {
+//         const data = JSON.parse(dat);
+//         console.log("Received chatMessage event:", data);
+
+//         const { room, message_data } = data;
+//         if (!room || !message_data) {
+//             console.error("Invalid request data:", data);
+//             return;
+//         }
+
+//         console.log(`Message received in room ${room}:`, message_data);
+//         io.to(room).emit("chatMessage", message_data);
+//     } catch (error) {
+//         console.error("Error processing chatMessage:", error);
+//         socket.disconnect(); // Optionally disconnect the socket
+//     }
+// });
