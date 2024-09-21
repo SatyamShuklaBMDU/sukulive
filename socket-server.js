@@ -28,7 +28,8 @@ io.on("connection", (socket) => {
     data =  JSON.parse(dat);
 
         console.log("Received chatMessage event:", data);
-        io.emit("RecievedMessage",data);
+        io.emit("mess", JSON.stringify({"mess":"hiii"}));
+        // io.emit("RecievedMessage",data);
         if (!data) {
             console.error("Invalid request data:", data);
             return;
@@ -39,7 +40,7 @@ io.on("connection", (socket) => {
             console.error("Invalid request data:", data);
             return;
         }
-
+        // io.to(room).emit("chatMessage", message_data);
         console.log(`Message received in room ${room}:`, message_data);
         io.to(room).emit("chatMessage", message_data);
     });
