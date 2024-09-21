@@ -26,9 +26,9 @@ io.on("connection", (socket) => {
         console.log(`User ${sender_id} joined room: ${room}`);
     });
     console.log("1");
-    socket.on("chatMessage", (dat) => {
+    socket.on("chatMessage", (data) => {
         try {
-            const data = JSON.parse(dat);
+            // const data = JSON.parse(dat);
             console.log("Received chatMessage event:", data);
             io.emit("mess", "data aya hai");
     
@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
             }
     
             console.log(`Message received in room ${room}:`, message_data);
-            // io.to(room).emit("chatMessage", message_data);
+            io.to(room).emit("chatMessage", message_data);
         } catch (error) {
             console.error("Error processing chatMessage:", error);
             socket.disconnect(); // Optionally disconnect the socket
