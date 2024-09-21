@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
         data =  JSON.parse(dat);
 
         console.log("Received chatMessage event:", data);
-        io.emit("mess", data);
+        io.emit("mess", "helo");
         // io.emit("RecievedMessage",data);
         if (!data) {
             console.error("Invalid request data:", data);
