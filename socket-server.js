@@ -26,7 +26,8 @@ io.on("connection", (socket) => {
     });
     console.log("1");
     socket.on("chatMessage", (dat) => {
-        io.brodcast.emit("mess", JSON.stringify({"mess":"hiii"}));
+        socket.emit("mess", JSON.stringify({"mess":"hiii"}));
+        // io.brodcast.emit("mess", JSON.stringify({"mess":"hiii"}));
         data =  JSON.parse(dat);
 
         console.log("Received chatMessage event:", data);
