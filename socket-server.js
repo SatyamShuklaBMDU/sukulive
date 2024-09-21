@@ -24,7 +24,9 @@ io.on("connection", (socket) => {
         console.log(`User ${sender_id} joined room: ${room}`);
     });
     console.log("1");
-    socket.on("chatMessage", (data) => {
+    socket.on("chatMessage", (dat) => {
+    data =  JSON.parse(dat);
+
         console.log("Received chatMessage event:", data);
         if (!data) {
             console.error("Invalid request data:", data);
