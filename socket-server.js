@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
         try {
             // const data = JSON.parse(dat);
             console.log("Received chatMessage event:", data);
-            io.emit("mess", "data aya hai");
+            io.emit("mess", JSON.stringify(data));
     
             const { room, message_data } = data;
             if (!room || !message_data) {
