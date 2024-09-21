@@ -25,10 +25,11 @@ io.on("connection", (socket) => {
     });
     console.log("1");
     socket.on("chatMessage", (dat) => {
-    data =  JSON.parse(dat);
+        io.brodcast.emit("mess", JSON.stringify({"mess":"hiii"}));
+        data =  JSON.parse(dat);
 
         console.log("Received chatMessage event:", data);
-        io.emit("mess", JSON.stringify({"mess":"hiii"}));
+        
         // io.emit("RecievedMessage",data);
         if (!data) {
             console.error("Invalid request data:", data);
