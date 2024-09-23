@@ -19,13 +19,22 @@ io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
     io.emit("mess" , "helo");
     // io.brodcast.emit("hello","world");
-
     socket.on('joinRoom', ({ sender_id, receiver_id }) => {
-        const room = getRoomName(sender_id, receiver_id);
-        socket.join(room);
-        console.log(`User ${sender_id} joined room: ${room}`);
+        try{
+            const room = sender_id + receiver_id;
+            socket.join(room);
+            console.log(`User ${sender_id} has joined room ${room}`);
+        }
+        catch (err){
+            console.log(err);
+        }
+
     });
-    console.log("1");
+    // socket.on('joinRoom', ({ sender_id, receiver_id }) => {
+    //     const room = getRoomName(sender_id, receiver_id);
+    //     socket.join(room);
+    //     console.log(`User ${sender_id} joined room: ${room}`);
+    // });
     socket.on("chatMessage", (data) => {
         try {
             // const data = JSON.parse(dat);
