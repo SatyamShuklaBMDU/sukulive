@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json());
 const server = http.createServer(app);
 app.use(cors());
+
 const io = socketIo(server, {
     cors: {
         origin: "*",
@@ -17,89 +18,59 @@ const io = socketIo(server, {
 
 io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
-    io.emit("mess" , "helo");
-    // io.brodcast.emit("hello","world");
-    socket.on('joinRoom', ({ sender_id, receiver_id }) => {
-        try{
-            const room = sender_id + receiver_id;
-            socket.join(room);
-            console.log(`User ${sender_id} has joined room ${room}`);
-        }
-        catch (err){
+
+    // When a user joins a conversation (based on conversation_id)
+    socket.on('joinConversation', (conversation_id) => {
+        try {
+            socket.join(`conversation_${conversation_id}`);
+            console.log(`User has joined conversation ${conversation_id}`);
+        } catch (err) {
             console.log(err);
         }
-
     });
-    // socket.on('joinRoom', ({ sender_id, receiver_id }) => {
-    //     const room = getRoomName(sender_id, receiver_id);
-    //     socket.join(room);
-    //     console.log(`User ${sender_id} joined room: ${room}`);
-    // });
+
+    // When a chat message is received, broadcast it to the correct conversation
     socket.on("chatMessage", (data) => {
         try {
-            // const data = JSON.parse(dat);
             console.log("Received chatMessage event:", data);
-            io.emit("mess", JSON.stringify(data));
-    
-            const { room, message_data } = data;
-            if (!room || !message_data) {
+
+            const { conversation_id, message_data } = data;
+            if (!conversation_id || !message_data) {
                 console.error("Invalid request data:", data);
                 return;
             }
-    
-            console.log(`Message received in room ${room}:`, message_data);
-            io.to(room).emit("chatMessage", message_data);
+
+            console.log(`Message received in conversation ${conversation_id}:`, message_data);
+            io.to(`conversation_${conversation_id}`).emit("chatMessage", message_data);
         } catch (error) {
             console.error("Error processing chatMessage:", error);
             socket.disconnect(); // Optionally disconnect the socket
         }
     });
-    
 
+    // Handle disconnection
     socket.on("disconnect", () => {
         console.log("Client disconnected:", socket.id);
     });
 });
 
+// Route to handle POST requests for sending messages via HTTP (from Laravel)
 app.post('/chatMessage', (req, res) => {
-    console.log('Headers:', req.headers); // Log the headers
-    console.log('POST request received:', req.body); // Log the entire body
+    console.log('POST request received:', req.body);
 
-    const { room, message_data } = req.body;
+    const { conversation_id, message_data } = req.body;
 
-    // Check if room or message_data is undefined
-    if (!room || !message_data) {
-        console.error('Missing room or message_data');
-        return res.status(400).json({ error: 'Missing room or message_data' });
+    // Check if conversation_id or message_data is undefined
+    if (!conversation_id || !message_data) {
+        console.error('Missing conversation_id or message_data');
+        return res.status(400).json({ error: 'Missing conversation_id or message_data' });
     }
 
-    // Emit message to the specified room
-    io.to(room).emit('chatMessage', message_data);
+    // Emit message to the specified conversation
+    io.to(`conversation_${conversation_id}`).emit('chatMessage', message_data);
     res.status(200).json({ status: 'Message delivered', message_data });
 });
-const getRoomName = (sender_id, receiver_id) => {
-    return sender_id < receiver_id ? `room_${sender_id}_${receiver_id}` : `room_${receiver_id}_${sender_id}`;
-};
+
+// Start the server
 const PORT = 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-
-// socket.on("chatMessage", (dat) => {
-//     try {
-//         const data = JSON.parse(dat);
-//         console.log("Received chatMessage event:", data);
-
-//         const { room, message_data } = data;
-//         if (!room || !message_data) {
-//             console.error("Invalid request data:", data);
-//             return;
-//         }
-
-//         console.log(`Message received in room ${room}:`, message_data);
-//         io.to(room).emit("chatMessage", message_data);
-//     } catch (error) {
-//         console.error("Error processing chatMessage:", error);
-//         socket.disconnect(); // Optionally disconnect the socket
-//     }
-// });
