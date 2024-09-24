@@ -37,6 +37,23 @@ class MessageController extends Controller
         );
 
         // Save message in database
+
+        $sender_id = Auth::id();
+        $receiver_id = $request->receiver_id;
+
+        // Create or retrieve the conversation
+        $conversation = Conversation::firstOrCreate(
+            [
+                'sender_id' => $sender_id,
+                'reciever_id' => $receiver_id,
+            ],
+            [
+                'sender_id' => $sender_id,
+                'reciever_id' => $receiver_id,
+            ]
+        );
+
+        // Save message in database
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_id' => $sender_id,
@@ -44,15 +61,15 @@ class MessageController extends Controller
             'message' => $request->message,
         ]);
         try {
-            $client = new Client("ws://localhost:8090");
+            $client = new Client("ws://13.202.220.240:8090");
             $client->send(json_encode([
                 'command' => 'message',
-                'conversation_id' => $conversation->id,
-                'sender_id' => $message->sender_id,
-                'sender_name' => Auth::user()->name, 
-                'receiver_id' => $message->receiver_id,
-                'receiver_name' => Customer::find($message->receiver_id)->name,
+                'from' => $sender_id,
+                'sender_name' => Auth::user()->name,
+                'to' => $receiver_id,
                 'message' => $message->message,
+                'receiver_name' => Customer::find($message->receiver_id)->name,
+                'conversation_id' => $conversation->id,
                 'time' => $message->created_at->toDateTimeString(),
             ]));
             $client->close();
