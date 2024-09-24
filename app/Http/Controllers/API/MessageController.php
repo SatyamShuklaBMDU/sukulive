@@ -47,12 +47,12 @@ class MessageController extends Controller
             $client = new Client("ws://13.202.220.240:8090");
             $client->send(json_encode([
                 'command' => 'message',
-                'conversation_id' => $conversation->id,
-                'sender_id' => $message->sender_id,
-                'sender_name' => Auth::user()->name, 
-                'receiver_id' => $message->receiver_id,
-                'receiver_name' => Customer::find($message->receiver_id)->name,
+                'from' => $sender_id,
+                'sender_name' => Auth::user()->name,
+                'to' => $receiver_id,
                 'message' => $message->message,
+                'receiver_name' => Customer::find($message->receiver_id)->name,
+                'conversation_id' => $conversation->id,
                 'time' => $message->created_at->toDateTimeString(),
             ]));
             $client->close();
