@@ -44,7 +44,7 @@ class MessageController extends Controller
             'message' => $request->message,
         ]);
         try {
-            $client = new Client("ws://localhost:8090");
+            $client = new Client("ws://13.202.220.240:8090");
             $client->send(json_encode([
                 'command' => 'message',
                 'conversation_id' => $conversation->id,
