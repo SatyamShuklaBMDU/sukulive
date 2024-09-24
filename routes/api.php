@@ -61,5 +61,5 @@ Route::get('diamonds', [DiamondController::class, 'getDiamonds'])->middleware('a
 // Chat API
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('/messages', [MessageController::class, 'sendMessage']);
-    Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
+    Route::get('/conversation/{conversation_id}/messages', [MessageController::class, 'getMessages']);
 });

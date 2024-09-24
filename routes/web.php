@@ -66,7 +66,7 @@ Route::post('/update-diamonds/{id}', [DiamondController::class, 'updateStatus'])
 
 
 
-Route::get('chat/{id}/{rid}',[MessageController::class,'showChatRoom']);
+Route::get('chat',[MessageController::class,'showChatRoom']);
 
 
 // Route::post('/update-plan/{id}', [UserController::class, 'updatePlan'])->name('
