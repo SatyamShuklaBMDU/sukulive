@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -16,20 +17,55 @@ class PostController extends Controller
         $validator = Validator::make($request->all(), [
             'media' => 'required|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:20480',
         ]);
+
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => 'validation fails.', 'error' => $validator->messages()], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation fails.',
+                'error' => $validator->messages()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $login = Auth::user();
         $customer = Customer::findOrFail($login->id);
-        $customer->addMedia($request->file('media'))->toMediaCollection('posts');
-        return response()->json(['message' => 'Media uploaded successfully'], Response::HTTP_OK);
+
+        $folderPath = 'public/' . $login->customer_id . '/media';
+        $mediaItem = $customer->addMedia($request->file('media'))
+            ->usingFileName($request->file('media')->getClientOriginalName())
+            ->toMediaCollection('posts', 'public');
+        $mediaUrl = $mediaItem->getUrl();
+        return response()->json([
+            'message' => 'Media uploaded successfully',
+            'media_url' => $mediaUrl
+        ], Response::HTTP_OK);
     }
+
 
     public function getMedia()
     {
         $login = Auth::user();
         $customer = Customer::findOrFail($login->id);
         $media = $customer->getMedia('posts');
-        return response()->json($media);
+        return response()->json(data: $media);
+    }
+
+    public function randomPost(Request $request)
+    {
+        $mediaItems = Media::inRandomOrder()->get();
+        $baseUrl = env('ASSET_URL');
+        $mainData = [];
+
+        foreach ($mediaItems as $media) {
+            $path = "storage/{$media->id}/{$media->file_name}";
+            $mediaUrl = asset($path);
+            $mainData[] = [
+                'file_name' => $media->file_name,
+                'uuid' => $media->uuid,
+                'original_url' => $mediaUrl
+            ];
+        }
+
+        return response()->json([
+            'media' => $mainData
+        ]);
     }
 }

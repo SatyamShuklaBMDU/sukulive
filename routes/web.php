@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\DiamondController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationController;
@@ -65,7 +66,7 @@ Route::post('/update-diamonds/{id}', [DiamondController::class, 'updateStatus'])
 
 
 
-
+Route::get('chat',[MessageController::class,'showChatRoom']);
 
 
 // Route::post('/update-plan/{id}', [UserController::class, 'updatePlan'])->name('

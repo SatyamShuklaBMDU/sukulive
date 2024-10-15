@@ -7,14 +7,17 @@
     "require": {
         "php": "^8.1",
         "beyondcode/laravel-comments": "^1.5",
-        "guzzlehttp/guzzle": "^7.2",
+        "beyondcode/laravel-websockets": "^1.14",
+        "cboden/ratchet": "^0.4.4",
+        "guzzlehttp/guzzle": "^7.9",
         "hexadog/laravel-themes-manager": "^1.13",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "overtrue/laravel-follow": "^5.2",
         "overtrue/laravel-like": "^5.3",
-        "spatie/laravel-medialibrary": "^11.9"
+        "spatie/laravel-medialibrary": "^11.9",
+        "textalk/websocket": "^1.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
