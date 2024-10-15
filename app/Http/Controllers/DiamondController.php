@@ -12,7 +12,6 @@ class DiamondController extends Controller
     public function index()
     {
         $diamonds = Diamond::orderBy('id','desc')->get();
-    //  dd($diamonds);
         return view('diamonds.index',compact('diamonds'));
     }
 

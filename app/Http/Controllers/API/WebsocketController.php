@@ -10,10 +10,9 @@ use Ratchet\MessageComponentInterface;
 class WebsocketController implements MessageComponentInterface
 {
     protected $clients = [];
-
     public function onOpen(ConnectionInterface $conn)
     {
-        echo "New connection! ({$conn->resourceId})\n";
+        echo "New connection Connected! ({$conn->resourceId})\n";
     }
 
     public function onMessage(ConnectionInterface $conn, $message)

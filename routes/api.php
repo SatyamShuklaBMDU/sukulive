@@ -33,32 +33,22 @@ Route::post('logout', [LoginController::class, 'logout'])->middleware('auth:sanc
 
 Route::post('update-profile', [LoginController::class, 'update'])->middleware('auth:sanctum');
 
-// follow-unfollow api
 Route::post('follow', [FollowController::class, 'follow'])->middleware('auth:sanctum');
 Route::post('unfollow', [FollowController::class, 'unfollow'])->middleware('auth:sanctum');
 
-// posts api
 Route::post('customers/media', [PostController::class, 'uploadMedia'])->middleware('auth:sanctum');
 Route::get('customers/media', [PostController::class, 'getMedia'])->middleware('auth:sanctum');
 Route::get('random/posts',[PostController::class,'randomPost'])->middleware('auth:sanctum');
 
-// like api
 Route::post('posts/like-unlike', [LikeController::class, 'likeOrUnlikePost'])->middleware('auth:sanctum');
 
-// comment api
 Route::post('posts/add-comment', [CommentController::class, 'addComment'])->middleware('auth:sanctum');
 
-
-//Notification Api
 Route::post('notifications', [NotificationController::class, 'getNotifications'])->middleware('auth:sanctum');
 
-// Plan and Pricing
 Route::get('get-plans', [PlansController::class, 'getPlans'])->middleware('auth:sanctum');
 
-
-//Diamonds
 Route::get('diamonds', [DiamondController::class, 'getDiamonds'])->middleware('auth:sanctum');
-// Chat API
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('/messages', [MessageController::class, 'sendMessage']);
     Route::get('/conversation/{conversation_id}/messages', [MessageController::class, 'getMessages']);

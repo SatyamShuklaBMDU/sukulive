@@ -20,11 +20,8 @@ class MessageController extends Controller
             'receiver_id' => 'required|exists:customers,id',
             'message' => 'required|string|max:500',
         ]);
-
         $sender_id = Auth::id();
         $receiver_id = $request->receiver_id;
-
-        // Create or retrieve the conversation
         $conversation = Conversation::firstOrCreate(
             [
                 'sender_id' => $sender_id,
@@ -36,12 +33,8 @@ class MessageController extends Controller
             ]
         );
 
-        // Save message in database
-
         $sender_id = Auth::id();
         $receiver_id = $request->receiver_id;
-
-        // Create or retrieve the conversation
         $conversation = Conversation::firstOrCreate(
             [
                 'sender_id' => $sender_id,
@@ -52,8 +45,6 @@ class MessageController extends Controller
                 'reciever_id' => $receiver_id,
             ]
         );
-
-        // Save message in database
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_id' => $sender_id,
@@ -76,8 +67,6 @@ class MessageController extends Controller
         } catch (\Exception $e) {
             Log::error('Error sending message to WebSocket server:', ['error' => $e->getMessage()]);
         }
-
-        // Return response to the sender
         return response()->json([
             'message' => 'Message sent successfully!',
             'data' => $message,

@@ -12,7 +12,6 @@ class PlansController extends Controller
     {
 
         $plans=Plan::orderBy('id','desc')->get();
-        // dd($plans);
         return view('plans.index',compact('plans'));
     }
 
@@ -20,7 +19,6 @@ class PlansController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the input fields
         $request->validate([
             'title' => 'required|string|max:255',
             'price' => 'required|numeric',
@@ -30,18 +28,14 @@ class PlansController extends Controller
             'feature' => 'required|array',
             'feature.*' => 'string|max:255',
         ]);
-
-        // Create a new plan
         Plan::create([
             'name' => $request->input('title'),
             'price' => $request->input('price'),
             'duration' => $request->input('duration'),
             'trial_period_days' => $request->input('trial_period_days') ? $request->input('trial_period_days') : 0,
             'plan_type' => $request->input('plan_type'),
-            'features' => json_encode($request->input('feature')), // Store features as JSON
+            'features' => json_encode($request->input('feature')),
         ]);
-
-        // Redirect to the plans list page with a success message
         return redirect()->route('plans.index')->with('success', 'Plan created successfully.');
     }
 
@@ -67,10 +61,6 @@ class PlansController extends Controller
         ]);
 
         $notification = Plan::findOrFail($id);
-
-        // dd($notification);
-
-
         $notification->update(
             [
                 'name' => $request->input('name'),
@@ -78,7 +68,7 @@ class PlansController extends Controller
             'duration' => $request->input('duration'),
             'trial_period_days' => $request->input('trial_period_days') ? $request->input('trial_period_days') : 0,
             'plan_type' => $request->input('plan_type'),
-            'features' => json_encode($request->input('feature')), // Store features as JSON
+            'features' => json_encode($request->input('feature')),
             ]
         );
 

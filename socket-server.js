@@ -19,7 +19,6 @@ const io = socketIo(server, {
 io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
 
-    // When a user joins a conversation (based on conversation_id)
     socket.on('joinConversation', (conversation_id) => {
         try {
             socket.join(`conversation_${conversation_id}`);
@@ -29,7 +28,6 @@ io.on("connection", (socket) => {
         }
     });
 
-    // When a chat message is received, broadcast it to the correct conversation
     socket.on("chatMessage", (data) => {
         try {
             console.log("Received chatMessage event:", data);
@@ -44,33 +42,28 @@ io.on("connection", (socket) => {
             io.to(`conversation_${conversation_id}`).emit("chatMessage", message_data);
         } catch (error) {
             console.error("Error processing chatMessage:", error);
-            socket.disconnect(); // Optionally disconnect the socket
+            socket.disconnect();
         }
     });
 
-    // Handle disconnection
     socket.on("disconnect", () => {
         console.log("Client disconnected:", socket.id);
     });
 });
 
-// Route to handle POST requests for sending messages via HTTP (from Laravel)
-app.post('/chatMessage', (req, res) => {
+    app.post('/chatMessage', (req, res) => {
     console.log('POST request received:', req.body);
 
     const { conversation_id, message_data } = req.body;
 
-    // Check if conversation_id or message_data is undefined
     if (!conversation_id || !message_data) {
         console.error('Missing conversation_id or message_data');
         return res.status(400).json({ error: 'Missing conversation_id or message_data' });
     }
 
-    // Emit message to the specified conversation
     io.to(`conversation_${conversation_id}`).emit('chatMessage', message_data);
     res.status(200).json({ status: 'Message delivered', message_data });
 });
 
-// Start the server
 const PORT = 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

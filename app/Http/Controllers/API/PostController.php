@@ -17,7 +17,6 @@ class PostController extends Controller
         $validator = Validator::make($request->all(), [
             'media' => 'required|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:20480',
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -27,7 +26,6 @@ class PostController extends Controller
         }
         $login = Auth::user();
         $customer = Customer::findOrFail($login->id);
-
         $folderPath = 'public/' . $login->customer_id . '/media';
         $mediaItem = $customer->addMedia($request->file('media'))
             ->usingFileName($request->file('media')->getClientOriginalName())
@@ -38,7 +36,6 @@ class PostController extends Controller
             'media_url' => $mediaUrl
         ], Response::HTTP_OK);
     }
-
 
     public function getMedia()
     {
@@ -51,9 +48,7 @@ class PostController extends Controller
     public function randomPost(Request $request)
     {
         $mediaItems = Media::inRandomOrder()->get();
-        $baseUrl = env('ASSET_URL');
         $mainData = [];
-
         foreach ($mediaItems as $media) {
             $path = "storage/{$media->id}/{$media->file_name}";
             $mediaUrl = asset($path);
