@@ -32,6 +32,7 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('update-profile', [LoginController::class, 'update'])->middleware('auth:sanctum');
+Route::post('reset-password', [LoginController::class, 'resetPassword'])->middleware('auth:sanctum');
 
 Route::post('follow', [FollowController::class, 'follow'])->middleware('auth:sanctum');
 Route::post('unfollow', [FollowController::class, 'unfollow'])->middleware('auth:sanctum');

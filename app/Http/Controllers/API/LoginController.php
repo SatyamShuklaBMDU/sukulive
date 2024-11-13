@@ -93,4 +93,18 @@ class LoginController extends Controller
         $customer->update($data);
         return response()->json(['status' => true, 'message' => 'Customer Details Updated Successfully', 'data' => $customer], 200);
     }
+
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => 'validation fails.', 'error' => $validator->messages()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        $user = Auth::user();
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return response()->json(['status' => true, 'message' => 'Password Reset Successfully'],Response::HTTP_OK);
+    }
 }
