@@ -97,14 +97,15 @@ class LoginController extends Controller
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'phone' => 'required|string|exists:customers,phone_number',
             'password' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response()->json(['status' => false, 'message' => 'validation fails.', 'error' => $validator->messages()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $user = Auth::user();
+        $user = Customer::where('phone_number', $request->phone)->first();
         $user->password = Hash::make($request->password);
         $user->save();
-        return response()->json(['status' => true, 'message' => 'Password Reset Successfully'],Response::HTTP_OK);
+        return response()->json(['status' => true, 'message' => 'Password Reset Successfully'], Response::HTTP_OK);
     }
 }
