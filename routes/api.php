@@ -9,6 +9,7 @@ use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\PlansController;
 use App\Http\Controllers\API\PostController;
+use App\Http\Controllers\API\VideoCallController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -53,4 +54,10 @@ Route::get('diamonds', [DiamondController::class, 'getDiamonds'])->middleware('a
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('/messages', [MessageController::class, 'sendMessage']);
     Route::get('/conversation/{conversation_id}/messages', [MessageController::class, 'getMessages']);
+
+    // Start Video Call
+    Route::post('start-live-video',[VideoCallController::class,'startLive'])->middleware('auth:sanctum');
+    Route::post('stop-live-video',[VideoCallController::class,'stopLive'])->middleware('auth:sanctum');
+    Route::post('join-live-video',[VideoCallController::class,'joinLive'])->middleware('auth:sanctum');
+    Route::get('get-live-sessions',[VideoCallController::class,'getLiveVideos'])->middleware('auth:sanctum');
 });

@@ -226,15 +226,15 @@
                     success: function(data) {
 
                         // console.log(data);
-  // Populate the modal fields with the plan data
-  $('#diamond').val(data.diamonds);
-            $('#mrp').val(data.mrp);
-            $('#sp').val(data.selling_price);
-            $('#notid').val(data.id)
+                        // Populate the modal fields with the plan data
+                $('#diamond').val(data.diamonds);
+                        $('#mrp').val(data.mrp);
+                        $('#sp').val(data.selling_price);
+                        $('#notid').val(data.id)
 
-            // Populate features
-          
-            // Show the modal
+                        // Populate features
+                    
+                            // Show the modal
             $('#exampleModal2').modal('show');
                     },
                     error: function(error) {
