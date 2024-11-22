@@ -46,7 +46,7 @@ Route::post('posts/like-unlike', [LikeController::class, 'likeOrUnlikePost'])->m
 
 Route::post('posts/add-comment', [CommentController::class, 'addComment'])->middleware('auth:sanctum');
 
-Route::post('notifications', [NotificationController::class, 'getNotifications'])->middleware('auth:sanctum');
+Route::get('notifications', [NotificationController::class, 'index'])->middleware('auth:sanctum');
 
 Route::get('get-plans', [PlansController::class, 'getPlans'])->middleware('auth:sanctum');
 
