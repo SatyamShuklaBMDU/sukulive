@@ -33,7 +33,9 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('update-profile', [LoginController::class, 'update'])->middleware('auth:sanctum');
+Route::get('get-profile',[LoginController::class,'getProfileData'])->middleware('auth:sanctum');
 Route::post('reset-password', [LoginController::class, 'resetPassword']);
+Route::get('get-all-user',[LoginController::class,'getAllUser'])->middleware('auth:sanctum');
 
 Route::post('follow', [FollowController::class, 'follow'])->middleware('auth:sanctum');
 Route::post('unfollow', [FollowController::class, 'unfollow'])->middleware('auth:sanctum');
@@ -43,13 +45,9 @@ Route::get('customers/media', [PostController::class, 'getMedia'])->middleware('
 Route::get('random/posts',[PostController::class,'randomPost'])->middleware('auth:sanctum');
 
 Route::post('posts/like-unlike', [LikeController::class, 'likeOrUnlikePost'])->middleware('auth:sanctum');
-
 Route::post('posts/add-comment', [CommentController::class, 'addComment'])->middleware('auth:sanctum');
-
 Route::get('notifications', [NotificationController::class, 'index'])->middleware('auth:sanctum');
-
 Route::get('get-plans', [PlansController::class, 'getPlans'])->middleware('auth:sanctum');
-
 Route::get('diamonds', [DiamondController::class, 'getDiamonds'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('/messages', [MessageController::class, 'sendMessage']);

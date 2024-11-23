@@ -323,7 +323,7 @@
         });
 
         function updateStatus(notifyId, status) {
-            var url = "{{ route('update.blog.cat.status', ['id' => ':id']) }}".replace(':id', notifyId);
+            var url = "{{ route('update.diamonds.status', ['id' => ':id']) }}".replace(':id', notifyId);
             fetch(url, {
                     method: 'POST',
                     headers: {
