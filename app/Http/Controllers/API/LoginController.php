@@ -130,6 +130,7 @@ class LoginController extends Controller
         $followersCount = $user->followers()->count();
         $totalPosts = $user->media()->where('collection_name', 'posts')->count();
         $data = [
+            'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
             'profile_pic' => $user->profile_pic ? $user->profile_pic : '',
