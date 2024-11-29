@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\LiveVideCall;
 use App\Models\LiveVideoCallJoiner;
+use App\Models\Story;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -124,5 +126,42 @@ class VideoCallController extends Controller
             "message" => "All Live Sessions",
             "data" => $data,
         ], Response::HTTP_OK);
+    }
+
+    public function uploadStory(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'media' => 'required|file',
+            'caption' => 'nullable|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => Response::HTTP_BAD_REQUEST,
+                'status' => false,
+                'message' => $validator->errors(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+        $user = Auth::user();
+        $story = new Story();
+        $story->customers_id = $user->id;
+        if ($request->hasFile('media')) {
+            $media = $request->file('media');
+            $mediaName = time() . '_media.' . $media->getClientOriginalExtension();
+            $media->move(public_path($user->customer_id . '/story'), $mediaName);
+            $story->media = asset($user->customer_id . '/media/' . $mediaName);
+        }
+        $story->caption = $request->caption;
+        $story->expires_at = now()->addDay();
+        $story->save();
+        return response()->json(['message' => 'Story uploaded successfully', 'story' => $story], Response::HTTP_CREATED);
+    }
+
+    public function getStories(Request $request)
+    {
+        $stories = Story::where('expires_at', '>', now())
+            ->orderBy('created_at', 'desc')
+            ->with('customer:id,name,profile_pic')
+            ->get();
+        return response()->json(['stories' => $stories], Response::HTTP_OK);
     }
 }

@@ -58,4 +58,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('stop-live-video',[VideoCallController::class,'stopLive'])->middleware('auth:sanctum');
     Route::post('join-live-video',[VideoCallController::class,'joinLive'])->middleware('auth:sanctum');
     Route::get('get-live-sessions',[VideoCallController::class,'getLiveVideos'])->middleware('auth:sanctum');
+    Route::post('upload-stories',[VideoCallController::class,'uploadStory']);
+    Route::get('stories',[VideoCallController::class,'getStories']);
 });
