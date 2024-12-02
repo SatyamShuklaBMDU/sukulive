@@ -447,107 +447,82 @@
 
     <script>
         var swiper = new Swiper('.swiper-container', {
-            loop: true, // Enable looping
-            slidesPerView: 4, // Show 4 images at once
-            spaceBetween: 30, // Add some space between slides
+            loop: true,
+            slidesPerView: 4,
+            spaceBetween: 30,
             autoplay: {
-                delay: 3000, // Auto-slide every 3 seconds
-                disableOnInteraction: false // Keep autoplay running even after user interaction
+                delay: 3000,
+                disableOnInteraction: false
             },
             pagination: {
                 el: '.swiper-pagination',
-                clickable: true, // Optional, makes pagination dots clickable
+                clickable: true,
             },
         });
     </script>
-    <!-- jQuery for Mobile Menu Toggle and Auto-Close on Click -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Toggle mobile menu on hamburger click
             $('#mobile-toggle').on('click', function(e) {
-                e.stopPropagation(); // Prevent event from bubbling up to the document
+                e.stopPropagation();
                 $('#mobile-menu').toggleClass('open');
             });
-
-            // Close the mobile menu when a navigation link is clicked
             $('.nav-link').on('click', function() {
-                $('#mobile-menu').removeClass('open'); // Close the menu
+                $('#mobile-menu').removeClass('open');
             });
-
-            // Close the mobile menu when clicking outside of it
             $(document).on('click', function(e) {
                 if (!$(e.target).closest('#mobile-menu, #mobile-toggle').length) {
-                    $('#mobile-menu').removeClass('open'); // Close the menu
+                    $('#mobile-menu').removeClass('open');
                 }
             });
         });
     </script>
-    <!-- JS here -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
     <style>
         #mobile-menu {
             position: relative;
-            /* Change from fixed to relative for larger screens */
             top: 0;
             right: 0;
             width: 100%;
-            /* Full-width for larger screens */
             height: auto;
             background-color: transparent;
-            /* No background for desktop view */
             box-shadow: none;
-            /* Remove shadow for desktop */
             display: block;
-            /* Always block-level by default */
             transition: none;
-            /* No animation for larger screens */
         }
-
-        /* Mobile specific styles */
         @media only screen and (max-width: 991px) {
             #mobile-menu {
                 position: fixed;
                 right: -300px;
-                /* Initially off-screen on the right */
                 width: 150px;
-                /* Menu width for mobile */
                 height: 100%;
                 background-color: #fff;
                 box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
                 transition: right 0.3s ease;
-                /* Animation for sliding */
             }
 
             #mobile-menu.open {
                 right: 0;
-                /* Slide in the menu when 'open' class is added */
             }
 
             .responsive {
                 display: block;
-                /* Show hamburger icon on small screens */
             }
 
             .main-menu {
                 display: none;
-                /* Hide default menu on small screens */
             }
         }
 
-        /* Show default menu for laptops and desktops */
         @media only screen and (min-width: 992px) {
             .main-menu {
                 display: block;
-                /* Ensure the main menu is visible on larger screens */
             }
 
             .responsive {
                 display: none;
-                /* Hide the hamburger menu on larger screens */
             }
         }
     </style>
 </body>
-
 </html>

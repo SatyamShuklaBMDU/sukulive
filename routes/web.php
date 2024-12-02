@@ -32,7 +32,7 @@ Route::get('terms-of-service', function () {
 Route::prefix("admin")->group(function () {
     Route::get('/', function () {
         return view('welcome');
-    });
+    })->name('login');
     Route::get('registration', [LoginController::class, 'registration'])->name('register-user');
     Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', function () {
