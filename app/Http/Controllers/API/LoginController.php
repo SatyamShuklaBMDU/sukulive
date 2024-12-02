@@ -39,30 +39,34 @@ class LoginController extends Controller
             'data' => $customer,
         ], Response::HTTP_CREATED);
     }
-
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'phone_number' => 'required|numeric',
             'password' => 'required',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['status' => false, 'message' => $validator->errors()], 400);
         }
-        $credentials = $request->only('phone_number', 'password');
-        if (Auth::guard('customer')->attempt($credentials)) {
-            $user = Customer::where('phone_number', $request->phone_number)->first();
-            $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json(['status' => true, 'message' => 'Login Successfully', 'token' => $token], 200);
+        $user = Customer::where('phone_number', $request->phone_number)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['status' => false, 'message' => 'User phone number and password do not match.'], 401);
         }
-        return response()->json(['status' => false, 'message' => 'User phone number and password not match.'], 401);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Login Successfully',
+            'token' => $token,
+        ], 200);
     }
 
     public function Logout(Request $request)
     {
         $user = Auth::user();
         $user->tokens()->delete();
-        Auth::guard('customer')->logout();
         return response()->json(['status' => true, 'message' => 'Logged Out Successfully'], 200);
     }
 
@@ -92,5 +96,51 @@ class LoginController extends Controller
         ];
         $customer->update($data);
         return response()->json(['status' => true, 'message' => 'Customer Details Updated Successfully', 'data' => $customer], 200);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|string|exists:customers,phone_number',
+            'password' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => 'validation fails.', 'error' => $validator->messages()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        $user = Customer::where('phone_number', $request->phone)->first();
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return response()->json(['status' => true, 'message' => 'Password Reset Successfully'], Response::HTTP_OK);
+    }
+
+    public function getAllUser()
+    {
+        $customer = Customer::where('id', '!=', Auth::user()->id)->where('status', true)->latest()->get();
+        return response()->json([
+            'status' => true,
+            'data' => $customer,
+        ], 200);
+    }
+
+    public function getProfileData()
+    {
+        $login = Auth::user();
+        $user = Customer::findOrFail($login->id);
+        $followingCount = $user->followings()->count();
+        $followersCount = $user->followers()->count();
+        $totalPosts = $user->media()->where('collection_name', 'posts')->count();
+        $data = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'profile_pic' => $user->profile_pic ? $user->profile_pic : '',
+            'total_followers' => $followersCount,
+            'total_following' => $followingCount,
+            'total_posts' => $totalPosts
+        ];
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ], Response::HTTP_OK);
     }
 }
