@@ -162,6 +162,22 @@ class VideoCallController extends Controller
             ->orderBy('created_at', 'desc')
             ->with('customer:id,name,profile_pic')
             ->get();
+        $stories->each(function ($story) {
+            $extension = pathinfo($story->media, PATHINFO_EXTENSION);
+            switch ($story) {
+                case $extension['extension'] == 'jpg' || $extension['extension'] == 'jpeg' || $extension['extension'] == 'png':
+                    $type = 'image';
+                    break;
+                case $extension['extension'] == 'mp4' || $extension['extension'] == 'mov' || $extension['extension'] == 'avi':
+                    $type = 'video';
+                    break;
+                default:
+                    $type = 'unknown';
+                    break;
+            }
+            $story->type = $type;
+        });
+
         return response()->json(['stories' => $stories], Response::HTTP_OK);
     }
 }
