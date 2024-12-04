@@ -162,22 +162,35 @@ class VideoCallController extends Controller
             ->orderBy('created_at', 'desc')
             ->with('customer:id,name,profile_pic')
             ->get();
-        $stories->each(function ($story) {
-            $extension = pathinfo($story->media_path, PATHINFO_EXTENSION);
-            switch ($story) {
-                case $extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'JPG' || $extension == 'JPEG' || $extension == 'PNG':
-                    $type = 'image';
-                    break;
-                case $extension == 'mp4' || $extension == 'mov' || $extension == 'avi' || $extension == 'MP4' || $extension == 'MOV' || $extension == 'AVI':
-                    $type = 'video';
-                    break;
-                default:
-                    $type = 'unknown';
-                    break;
-            }
-            $story->type = $type;
-        });
+        $groupedStories = $stories->groupBy('customers_id')->map(function ($storiesGroup) {
+            $customer = $storiesGroup->first()->customer;
+            $storiesList = $storiesGroup->map(function ($story) {
+                $extension = pathinfo($story->media_path, PATHINFO_EXTENSION);
+                $type = match (strtolower($extension)) {
+                    'jpg', 'jpeg', 'png' => 'image',
+                    'mp4', 'mov', 'avi' => 'video',
+                    default => 'unknown',
+                };
 
-        return response()->json(['stories' => $stories], Response::HTTP_OK);
+                $story->type = $type;
+                return $story->only([
+                    'id',
+                    'customers_id',
+                    'media_path',
+                    'caption',
+                    'expires_at',
+                    'created_at',
+                    'updated_at',
+                    'type'
+                ]);
+            });
+            return [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'profile_pic' => $customer->profile_pic,
+                'stories' => $storiesList
+            ];
+        })->values();
+        return response()->json(['customers' => $groupedStories], Response::HTTP_OK);
     }
 }
