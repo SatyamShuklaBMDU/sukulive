@@ -34,13 +34,13 @@ Route::prefix("admin")->group(function () {
         return view('welcome');
     })->name('login');
     Route::get('registration', [LoginController::class, 'registration'])->name('register-user');
+    Route::post('custom-login', [LoginController::class, 'customLogin'])->name('login.custom');
+    Route::post('custom-registration', [LoginController::class, 'customRegistration'])->name('register.custom');
     Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
         })->name('dashboard');
         // Route::get('dashboard', [LoginController::class, 'dashboard']); 
-        Route::post('custom-login', [LoginController::class, 'customLogin'])->name('login.custom');
-        Route::post('custom-registration', [LoginController::class, 'customRegistration'])->name('register.custom');
         Route::get('signout', [LoginController::class, 'signOut'])->name('signout');
 
         Route::get('user', [UserController::class, 'index'])->name('user.index');

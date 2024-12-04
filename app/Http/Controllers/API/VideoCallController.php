@@ -148,7 +148,7 @@ class VideoCallController extends Controller
             $media = $request->file('media');
             $mediaName = time() . '_media.' . $media->getClientOriginalExtension();
             $media->move(public_path($user->customer_id . '/story'), $mediaName);
-            $story->media = asset($user->customer_id . '/media/' . $mediaName);
+            $story->media_path = asset($user->customer_id . '/story/' . $mediaName);
         }
         $story->caption = $request->caption;
         $story->expires_at = now()->addDay();
@@ -163,12 +163,12 @@ class VideoCallController extends Controller
             ->with('customer:id,name,profile_pic')
             ->get();
         $stories->each(function ($story) {
-            $extension = pathinfo($story->media, PATHINFO_EXTENSION);
+            $extension = pathinfo($story->media_path, PATHINFO_EXTENSION);
             switch ($story) {
-                case $extension['extension'] == 'jpg' || $extension['extension'] == 'jpeg' || $extension['extension'] == 'png':
+                case $extension == 'jpg' || $extension == 'jpeg' || $extension == 'png' || $extension == 'JPG' || $extension == 'JPEG' || $extension == 'PNG':
                     $type = 'image';
                     break;
-                case $extension['extension'] == 'mp4' || $extension['extension'] == 'mov' || $extension['extension'] == 'avi':
+                case $extension == 'mp4' || $extension == 'mov' || $extension == 'avi' || $extension == 'MP4' || $extension == 'MOV' || $extension == 'AVI':
                     $type = 'video';
                     break;
                 default:
