@@ -119,7 +119,10 @@ class VideoCallController extends Controller
     public function getLiveVideos(Request $request)
     {
         $today = Carbon::today();
-        $data = LiveVideCall::whereDate("live_date", $today)->where('live_status', 'running')->latest()->get();
+        $data = LiveVideCall::whereDate("live_date", $today)->where('live_status', 'running')->with('customer')->latest()->get();
+        $data->each(function ($video) {
+            $video->customer->profile_pic = $video->customer->profile_pic ? $video->customer->profile_pic : 'https://fastly.picsum.photos/id/855/200/300.jpg?hmac=2aBMcUWlYEynKymdtTjCpwCpl2v_ELuWkkmOeWbjqa0';
+        });
         return response()->json([
             "status_code" => Response::HTTP_OK,
             "status" => true,

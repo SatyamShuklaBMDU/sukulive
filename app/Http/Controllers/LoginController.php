@@ -66,14 +66,13 @@ class LoginController extends Controller
         if(Auth::check()){
             return view('dashboard');
         }
-        return redirect("login")->withSuccess('You are not allowed to access');
+        return redirect()->route("login")->withSuccess('You are not allowed to access');
     }
 
     public function signOut() {
         Session::flush();
         Auth::logout();
-  
-        return Redirect('login');
+        return redirect()->route('login');
     }
 
 }
