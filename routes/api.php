@@ -7,6 +7,7 @@ use App\Http\Controllers\API\LikeController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\PlansController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\VideoCallController;
@@ -60,4 +61,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('get-live-sessions',[VideoCallController::class,'getLiveVideos'])->middleware('auth:sanctum');
     Route::post('upload-stories',[VideoCallController::class,'uploadStory']);
     Route::get('stories',[VideoCallController::class,'getStories']);
+
+    Route::post('add-wallet',[PaymentController::class,'handleSuccess']);
+    Route::post('handle-failure',[PaymentController::class,'handlefailure']);
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +33,11 @@ class LoginController extends Controller
             'customer_id' => Customer::generateUniqueCode(),
             'password' => Hash::make($request->password),
         ]);
-
+        $wallet = Wallet::create([
+            'customer_id' => $customer->id,
+            'balance' => 0.00,
+        ]);
+        // $customer->wallet()->associate($wallet);
         return response()->json([
             'status' => true,
             'message' => 'Customer created successfully',

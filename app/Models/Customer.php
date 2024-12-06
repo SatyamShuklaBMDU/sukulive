@@ -26,4 +26,9 @@ class Customer extends Authenticatable implements HasMedia
         } while (self::where('customer_id', $uniqueNo)->exists());
         return $uniqueNo;
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class, 'customer_id', 'id');
+    }
 }
