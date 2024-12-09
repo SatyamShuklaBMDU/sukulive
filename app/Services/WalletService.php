@@ -52,7 +52,7 @@ class WalletService
             return $wallet->transactions()->create([
                 'amount' => $data['amount'],
                 'rozarpay_payment_status' => $data['rozarpay_payment_status'],
-                'failure_reason' => $data['failure_reason'],
+                'failure_reason' => $data['reason'],
             ]);
         });
     }

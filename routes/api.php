@@ -64,4 +64,8 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::post('add-wallet',[PaymentController::class,'handleSuccess']);
     Route::post('handle-failure',[PaymentController::class,'handlefailure']);
+    Route::get('get-wallet',[PaymentController::class,'getWallet']);
+    Route::get('get-wallet-history',[PaymentController::class,'getWalletHistory']);
+    Route::get('get-profile-by-id/{id}',[LoginController::class,'getProfileById']);
+    Route::get('get-follower-following/{id}',[LoginController::class,'followerfollowing']);
 });

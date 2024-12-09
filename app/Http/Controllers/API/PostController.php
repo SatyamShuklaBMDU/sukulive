@@ -41,8 +41,10 @@ class PostController extends Controller
     {
         $login = Auth::user();
         $customer = Customer::findOrFail($login->id);
-        $media = $customer->getMedia('posts');
-        return response()->json(data: $media);
+        $media = $customer->getMedia('posts')->map(function($item){
+            return $item->toArray();
+        })->toArray();
+        return response()->json(array_values($media));
     }
 
     public function randomPost(Request $request)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Story;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -133,19 +134,126 @@ class LoginController extends Controller
         $user = Customer::findOrFail($login->id);
         $followingCount = $user->followings()->count();
         $followersCount = $user->followers()->count();
-        $totalPosts = $user->media()->where('collection_name', 'posts')->count();
+        $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
+        $totalPosts = $user->getMedia('posts')->map(function ($media) {
+            return [
+                'id' => $media->id,
+                'file_name' => $media->file_name,
+                'uuid' => $media->uuid,
+                'original_url' => $media->getUrl(),
+            ];
+        });
+        $stories = Story::where('customers_id', $id)
+            ->where('expires_at', '>', now())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $storiesList = $stories->map(function ($story) {
+            $extension = pathinfo($story->media_path, PATHINFO_EXTENSION);
+            $type = match (strtolower($extension)) {
+                'jpg', 'jpeg', 'png' => 'image',
+                'mp4', 'mov', 'avi' => 'video',
+                default => 'unknown',
+            };
+            $story->type = $type;
+            return $story->only([
+                'id',
+                'customers_id',
+                'media_path',
+                'caption',
+                'expires_at',
+                'created_at',
+                'updated_at',
+                'type'
+            ]);
+        });
         $data = [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'profile_pic' => $user->profile_pic ? $user->profile_pic : '',
+            'profile_pic' => $user->profile_pic ?: '',
             'total_followers' => $followersCount,
             'total_following' => $followingCount,
-            'total_posts' => $totalPosts
+            'post_count' => $totalPostsCount,
+            'total_posts' => $totalPosts,
+            'stories' => $storiesList,
         ];
-        return response()->json([
-            'status' => true,
-            'data' => $data
-        ], Response::HTTP_OK);
+        return response()->json($data, Response::HTTP_OK);
+    }
+
+    public function getProfileById($id)
+    {
+        $user = Customer::findOrFail($id);
+        $followingCount = $user->followings()->count();
+        $followersCount = $user->followers()->count();
+        $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
+        $totalPosts = $user->getMedia('posts')->map(function ($media) {
+            return [
+                'id' => $media->id,
+                'file_name' => $media->file_name,
+                'uuid' => $media->uuid,
+                'original_url' => $media->getUrl(),
+            ];
+        });
+        $stories = Story::where('customers_id', $id)
+            ->where('expires_at', '>', now())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $storiesList = $stories->map(function ($story) {
+            $extension = pathinfo($story->media_path, PATHINFO_EXTENSION);
+            $type = match (strtolower($extension)) {
+                'jpg', 'jpeg', 'png' => 'image',
+                'mp4', 'mov', 'avi' => 'video',
+                default => 'unknown',
+            };
+            $story->type = $type;
+            return $story->only([
+                'id',
+                'customers_id',
+                'media_path',
+                'caption',
+                'expires_at',
+                'created_at',
+                'updated_at',
+                'type'
+            ]);
+        });
+        $data = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'profile_pic' => $user->profile_pic ?: '',
+            'total_followers' => $followersCount,
+            'total_following' => $followingCount,
+            'post_count' => $totalPostsCount,
+            'total_posts' => $totalPosts,
+            'stories' => $storiesList,
+        ];
+
+        return response()->json($data, Response::HTTP_OK);
+    }
+
+    public function followerfollowing($id)
+    {
+        $user = Customer::findOrFail($id);
+        $followers = $user->followers->map(function ($follower) {
+            return [
+                'id' => $follower->id,
+                'name' => $follower->name,
+                'profile_pic' => $follower->profile_pic ?: '',
+            ];
+        });
+        $followings = $user->followings->map(function ($following) {
+            $followedUser = Customer::find($following->followable_id);
+            return $followedUser ? [
+                'id' => $followedUser->id,
+                'name' => $followedUser->name,
+                'profile_pic' => $followedUser->profile_pic ?: '',
+            ] : null;
+        })->filter();
+        $data = [
+            'followers' => $followers,
+            'followings' => $followings,
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 }

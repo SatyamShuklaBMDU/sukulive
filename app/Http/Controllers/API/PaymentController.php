@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -81,16 +82,32 @@ class PaymentController extends Controller
         ];
         Log::error('Razorpay Payment Failure', $request->all());
         try {
-            $this->walletService->debit($wallet, $data);
+            $this->walletService->failed($wallet, $data);
             return response()->json([
                 'success' => true,
                 'message' => 'Payment failed successfully.',
-            ],Response::HTTP_OK);
+            ], Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Payment failed. Please try again.',
                 'error_details' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function getWallet()
+    {
+        $wallet = auth()->user()->wallet->balance;
+        return response()->json(['balance' => (int) $wallet,], Response::HTTP_OK);
+    }
+
+    public function getWalletHistory()
+    {
+        $wallet = auth()->user()->wallet->id;
+        $data = Transaction::where('wallet_id', $wallet)->select('amount','transaction_type','created_at')->get();
+        $data->each(function ($item) {
+            $item->transaction_type = $item->transaction_type ? $item->transaction_type :'failed';
+        });
+        return response()->json(['data' => $data], Response::HTTP_OK);
     }
 }
