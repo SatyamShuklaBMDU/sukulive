@@ -165,18 +165,19 @@ class VideoCallController extends Controller
             ->orderBy('created_at', 'desc')
             ->with('customer:id,name,profile_pic')
             ->get();
-        $groupedStories = $stories->groupBy('customers_id')->map(function ($storiesGroup) {
+        $path = "https://sukulive.com";
+        $groupedStories = $stories->groupBy('customers_id')->map(function ($storiesGroup) use ($path) {
             $customer = $storiesGroup->first()->customer;
-            $storiesList = $storiesGroup->map(function ($story) {
+            $storiesList = $storiesGroup->map(function ($story) use ($path) {
                 $extension = pathinfo($story->media_path, PATHINFO_EXTENSION);
                 $type = match (strtolower($extension)) {
                     'jpg', 'jpeg', 'png' => 'image',
                     'mp4', 'mov', 'avi' => 'video',
                     default => 'unknown',
                 };
-                
+
                 $story->type = $type;
-                $story->media_path = asset($story->media_path);
+                $story->media_path = $path . $story->media_path;
                 return $story->only([
                     'id',
                     'customers_id',
