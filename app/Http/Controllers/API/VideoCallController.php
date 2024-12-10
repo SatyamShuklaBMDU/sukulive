@@ -174,8 +174,9 @@ class VideoCallController extends Controller
                     'mp4', 'mov', 'avi' => 'video',
                     default => 'unknown',
                 };
-
+                
                 $story->type = $type;
+                $story->media_path = asset($story->media_path);
                 return $story->only([
                     'id',
                     'customers_id',
