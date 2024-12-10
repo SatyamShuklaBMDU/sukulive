@@ -14,9 +14,8 @@ class PostController extends Controller
 {
     public function uploadMedia(Request $request)
     {
-        dd($request->file("media"));
         $validator = Validator::make($request->all(), [
-            'media' => 'required',
+            'media' => 'required|file',
         ]);
         if ($validator->fails()) {
             return response()->json([
