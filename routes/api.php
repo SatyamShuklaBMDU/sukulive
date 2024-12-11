@@ -68,4 +68,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('get-wallet-history',[PaymentController::class,'getWalletHistory']);
     Route::get('get-profile-by-id/{id}',[LoginController::class,'getProfileById']);
     Route::get('get-follower-following/{id}',[LoginController::class,'followerfollowing']);
+
+    Route::get('check-follower/{id}',[FollowController::class,'checkFollow']);
 });

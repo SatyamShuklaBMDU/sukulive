@@ -41,6 +41,21 @@ class FollowController extends Controller
         $person = Customer::findOrFail(id: $login->id);
         $follower = $person->followers()->count();
         $followings = $person->followings()->count();
-        return response()->json(['followers'=>$follower,'followings'=>$followings],Response::HTTP_OK);
+        return response()->json(['followers' => $follower, 'followings' => $followings], Response::HTTP_OK);
+    }
+
+    public function checkFollowing($id)
+    {
+        $login = Auth::user();
+        $user = Customer::findOrFail($login->id);
+        $person = Customer::findOrFail($id);
+        if ($user->isFollowing($person)) {
+            $data['message'] = 'Follow';
+            $data['following'] = true;
+        } else {
+            $data['message'] = 'Not Follow';
+            $data['following'] = false;
+        }
+        return response()->json($data, Response::HTTP_OK);
     }
 }
