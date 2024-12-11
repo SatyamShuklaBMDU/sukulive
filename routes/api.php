@@ -72,4 +72,5 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('check-follower/{id}',[FollowController::class,'checkFollowing']);
     Route::post('/diamonds/purchase', [DiamondsControlller::class, 'purchaseDiamonds']);
+    Route::get('get-diamonds',[DiamondsControlller::class,'getDiamonds']);
 });

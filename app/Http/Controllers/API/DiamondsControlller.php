@@ -8,7 +8,9 @@ use App\Models\Diamond;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class DiamondsControlller extends Controller
 {
@@ -59,5 +61,13 @@ class DiamondsControlller extends Controller
             'total_diamonds' => $customerDiamonds->total_diamonds,
             'available_diamonds' => $customerDiamonds->available_diamonds,
         ]);
+    }
+
+    public function getDiamonds()
+    {
+        $user = Auth::user();
+        $balance = $user->diamonds->available_diamonds;
+        $data['balance'] = $balance;
+        return response()->json($data, Response::HTTP_OK);
     }
 }
