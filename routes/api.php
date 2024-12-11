@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\DiamondController;
+use App\Http\Controllers\API\DiamondsControlller;
 use App\Http\Controllers\API\FollowController;
 use App\Http\Controllers\API\LikeController;
 use App\Http\Controllers\API\LoginController;
@@ -69,5 +70,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('get-profile-by-id/{id}',[LoginController::class,'getProfileById']);
     Route::get('get-follower-following/{id}',[LoginController::class,'followerfollowing']);
 
-    Route::get('check-follower/{id}',[FollowController::class,'checkFollow']);
+    Route::get('check-follower/{id}',[FollowController::class,'checkFollowing']);
+    Route::post('/diamonds/purchase', [DiamondsControlller::class, 'purchaseDiamonds']);
 });
