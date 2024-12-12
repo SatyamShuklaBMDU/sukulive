@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\MessageController;
 use App\Http\Controllers\DiamondController;
+use App\Http\Controllers\GiftController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PlansController;
@@ -63,6 +64,14 @@ Route::prefix("admin")->group(function () {
         Route::put('plans/{id}', [PlansController::class, 'update'])->name('plans.update');
         Route::delete('plans/{id}', [PlansController::class, 'destroy'])->name('plans.destroy');
         Route::post('/update-plans/{id}', [PlansController::class, 'updateStatus'])->name('update.plans.status');
+
+        // Gifts 
+        Route::get('gifts', [GiftController::class, 'index'])->name('gifts.index');
+        Route::post('gifts', [GiftController::class, 'store'])->name('gifts.store');
+        Route::get('gifts/{id}/edit', [GiftController::class, 'edit'])->name('gifts.edit');
+        Route::post('gifts/{id}', [GiftController::class, 'update'])->name('gifts.update');
+        Route::delete('gifts/{id}', [GiftController::class, 'destroy'])->name('gifts.destroy');
+        Route::post('/update-gifts/{id}', [GiftController::class, 'updateStatus'])->name('update.gifts.status');
 
 
         //Diamonds

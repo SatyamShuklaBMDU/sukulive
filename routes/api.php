@@ -41,6 +41,7 @@ Route::get('get-all-user',[LoginController::class,'getAllUser'])->middleware('au
 
 Route::post('follow', [FollowController::class, 'follow'])->middleware('auth:sanctum');
 Route::post('unfollow', [FollowController::class, 'unfollow'])->middleware('auth:sanctum');
+Route::get('counting', [FollowController::class, 'counting'])->middleware('auth:sanctum');
 
 Route::post('customers/media', [PostController::class, 'uploadMedia'])->middleware('auth:sanctum');
 Route::get('customers/media', [PostController::class, 'getMedia'])->middleware('auth:sanctum');
