@@ -38,8 +38,10 @@ class FollowController extends Controller
     public function counting()
     {
         $login = Auth::user();
+        $fol = Customer::findOrFail($login->id);
         $user = Customer::where('id', $login->id)->withCount(['followings', 'followables'])->get();
-        return response()->json(['user' => $user], Response::HTTP_OK);
+        $follower = $fol->followers;
+        return response()->json(['user' => $user, 'data' => $follower], Response::HTTP_OK);
     }
 
     public function checkFollowing($id)
