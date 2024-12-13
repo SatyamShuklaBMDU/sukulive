@@ -20,7 +20,7 @@ class FileHelper
         try {
             $folderPath = public_path($folder);
             if (!file_exists($folderPath)) {
-                mkdir($folderPath, 0777, true);
+                mkdir($folderPath, 0775, true);
             }
             $file->move($folderPath, $fileName);
             return asset($folder . '/' . $fileName);
