@@ -9,6 +9,7 @@ use App\Models\Story;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -135,9 +136,11 @@ class LoginController extends Controller
     {
         $login = Auth::user();
         $user = Customer::findOrFail($login->id);
-        dd($user->followers());
         $followingCount = $user->followings()->count();
-        $followersCount = $user->followers()->count();
+        $followersCount = DB::table('followables')
+            ->where('followable_id', $user->id)
+            ->where('followable_type', 'App\Models\Customer::class')
+            ->count();;
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
         $totalPosts = $user->getMedia('posts')->map(function ($media) {
             return [
