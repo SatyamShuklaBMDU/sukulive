@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class FileHelper
 {
@@ -24,6 +25,7 @@ class FileHelper
             $file->move($folderPath, $fileName);
             return asset($folder . '/' . $fileName);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return null;
         }
     }
