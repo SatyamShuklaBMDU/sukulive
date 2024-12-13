@@ -139,7 +139,7 @@ class LoginController extends Controller
         $followingCount = $user->followings()->count();
         $followersCount = DB::table('followables')
             ->where('followable_id', $user->id)
-            ->where('followable_type', 'App\Models\Customer::class')
+            ->where('followable_type', 'App\Models\Customer')
             ->count();;
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
         $totalPosts = $user->getMedia('posts')->map(function ($media) {
