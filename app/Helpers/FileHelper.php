@@ -25,7 +25,7 @@ class FileHelper
             $file->move($folderPath, $fileName);
             return asset($folder . '/' . $fileName);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            dd($e->getMessage());
             return null;
         }
     }
