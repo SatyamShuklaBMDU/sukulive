@@ -69,7 +69,7 @@ Route::prefix("admin")->group(function () {
         Route::get('gifts', [GiftController::class, 'index'])->name('gifts.index');
         Route::post('gifts', [GiftController::class, 'store'])->name('gifts.store');
         Route::get('gifts/{id}/edit', [GiftController::class, 'edit'])->name('gifts.edit');
-        Route::post('gifts/{id}', [GiftController::class, 'update'])->name('gifts.update');
+        Route::put('gifts/{id}', [GiftController::class, 'update'])->name('gifts.update');
         Route::delete('gifts/{id}', [GiftController::class, 'destroy'])->name('gifts.destroy');
         Route::post('/update-gifts/{id}', [GiftController::class, 'updateStatus'])->name('update.gifts.status');
 

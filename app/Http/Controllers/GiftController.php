@@ -48,14 +48,14 @@ class GiftController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'gift' => 'required|file|mimes:svg',
+            'gift' => 'sometimes|file|mimes:svg',
         ]);
         $notification = Gift::findOrFail($id);
         if ($request->hasFile('gift')) {
             $file = $request->file('gift');
             $extension = $file->getClientOriginalExtension();
             $fileName = time() . '.' . $extension;
-            $$notification->image = FileHelper::storeFile($file, 'Gift/' , $fileName);
+            $notification->image = FileHelper::storeFile($file, 'Gift/' , $fileName);
             $notification->save();
         }
         $notification->update(

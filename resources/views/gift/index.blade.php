@@ -216,6 +216,7 @@
                     url: "{{ url('admin/gifts') }}/" + id + "/edit",
                     type: "GET",
                     success: function(data) {
+                        $('#notid').val(data.id);
                         $('#title1').val(data.name);
                         $('#price1').val(data.price);
                         $('#exampleModal2').modal('show');
@@ -230,13 +231,14 @@
                 e.preventDefault();
                 let id = $('#notid').val();
                 var updateformData = new FormData(this);
+                updateformData.append('_method', 'PUT');
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
                 $.ajax({
-                    url: "{{ url('admin/gifts') }}/" + id,
+                    url: "{{ route('gifts.update', ':id') }}".replace(':id', id),
                     type: "POST",
                     data: updateformData,
                     processData: false,
@@ -268,7 +270,7 @@
                             }
                         });
                         $.ajax({
-                            url: "{{ url('gifts') }}/" + id,
+                            url: "{{ url('admin/gifts') }}/" + id,
                             type: "DELETE",
                             success: function(response) {
                                 toastr.success(response.success);
