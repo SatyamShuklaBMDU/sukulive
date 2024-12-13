@@ -251,7 +251,7 @@ class LoginController extends Controller
             ->where('followables.followable_id', $user->id)
             ->where('followables.followable_type', 'App\Models\Customer')
             ->select('customers.id', 'customers.name', 'customers.profile_pic')
-            ->paginate(10)
+            ->paginate(1)
             ->through(function ($follower) {
                 return [
                     'id' => $follower->id,
@@ -261,7 +261,7 @@ class LoginController extends Controller
             });
 
         $followings = $user->followings()
-            ->paginate(10)
+            ->paginate(1)
             ->through(function ($following) {
                 $followedUser = Customer::find($following->followable_id);
                 return $followedUser ? [
