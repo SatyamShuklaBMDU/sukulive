@@ -245,7 +245,7 @@ class LoginController extends Controller
     public function followerfollowing($id)
     {
         $user = Customer::findOrFail($id);
-        $followers = $user->followers->map(function ($follower) {
+        $followers = $user->follower->map(function ($follower) {
             return [
                 'id' => $follower->id,
                 'name' => $follower->name,
