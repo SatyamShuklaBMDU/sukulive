@@ -140,7 +140,7 @@ class LoginController extends Controller
         $followersCount = DB::table('followables')
             ->where('followable_id', $user->id)
             ->where('followable_type', 'App\Models\Customer')
-            ->count();;
+            ->count();
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
         $totalPosts = $user->getMedia('posts')->map(function ($media) {
             return [
@@ -191,7 +191,10 @@ class LoginController extends Controller
     {
         $user = Customer::findOrFail($id);
         $followingCount = $user->followings()->count();
-        $followersCount = $user->followers()->count();
+        $followersCount = DB::table('followables')
+            ->where('followable_id', $user->id)
+            ->where('followable_type', 'App\Models\Customer')
+            ->count();
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
         $totalPosts = $user->getMedia('posts')->map(function ($media) {
             return [
