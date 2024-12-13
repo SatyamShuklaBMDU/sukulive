@@ -245,13 +245,19 @@ class LoginController extends Controller
     public function followerfollowing($id)
     {
         $user = Customer::findOrFail($id);
-        $followers = $user->follower->map(function ($follower) {
-            return [
-                'id' => $follower->id,
-                'name' => $follower->name,
-                'profile_pic' => $follower->profile_pic ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-            ];
-        });
+        $followers = DB::table('followables')
+            ->join('customers', 'followables.user_id', '=', 'customers.id')
+            ->where('followables.followable_id', $user->id)
+            ->where('followables.followable_type', 'App\Models\Customer')
+            ->select('customers.id', 'customers.name', 'customers.profile_pic')
+            ->get()
+            ->map(function ($follower) {
+                return [
+                    'id' => $follower->id,
+                    'name' => $follower->name,
+                    'profile_pic' => $follower->profile_pic ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                ];
+            });
         $followings = $user->followings->map(function ($following) {
             $followedUser = Customer::find($following->followable_id);
             return $followedUser ? [
