@@ -4,6 +4,7 @@ use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\API\DiamondController;
 use App\Http\Controllers\API\DiamondsControlller;
 use App\Http\Controllers\API\FollowController;
+use App\Http\Controllers\API\GiftController;
 use App\Http\Controllers\API\LikeController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\MessageController;
@@ -74,4 +75,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('check-follower/{id}',[FollowController::class,'checkFollowing']);
     Route::post('/diamonds/purchase', [DiamondsControlller::class, 'purchaseDiamonds']);
     Route::get('get-diamonds',[DiamondsControlller::class,'getDiamonds']);
+
+    Route::get('get-gifts',[GiftController::class,'index']);
 });
