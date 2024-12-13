@@ -136,7 +136,7 @@ class LoginController extends Controller
         $login = Auth::user();
         $user = Customer::findOrFail($login->id);
         $followingCount = $user->followings()->count();
-        $followersCount = $user->withCount(['followables'])->count();
+        $followersCount = $user->withCount(['followables','followings'])->get();
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
         $totalPosts = $user->getMedia('posts')->map(function ($media) {
             return [
