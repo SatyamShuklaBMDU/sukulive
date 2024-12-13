@@ -13,7 +13,7 @@ class GiftController extends Controller
         $gift = Gift::where("is_active", true)->orderBy("id", "desc")->get();
         $path = "https://sukulive.com/";
         $gift->each(function ($gift) use ($path) {
-            $gift->image = $gift->image ? $path . $gift->image : '';
+            $gift->image = $gift->image ? "{$path}{$gift->image}" : '';
         });
         return response()->json($gift, 200);
     }
