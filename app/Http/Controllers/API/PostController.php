@@ -51,13 +51,14 @@ class PostController extends Controller
     {
         $mediaItems = Media::inRandomOrder()->get();
         $mainData = [];
+        $url = "https://sukulive.com/";
         foreach ($mediaItems as $media) {
             $path = "storage/{$media->id}/{$media->file_name}";
             $mediaUrl = asset($path);
             $mainData[] = [
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
-                'original_url' => $mediaUrl
+                'original_url' =>$url.$mediaUrl
             ];
         }
 
