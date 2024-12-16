@@ -41,7 +41,7 @@ class PostController extends Controller
     {
         $login = Auth::user();
         $customer = Customer::findOrFail($login->id);
-        $media = $customer->getMedia('posts')->map(function($item){
+        $media = $customer->getMedia('posts')->map(function ($item) {
             return $item->toArray();
         })->toArray();
         return response()->json(array_values($media));
@@ -53,12 +53,18 @@ class PostController extends Controller
         $mainData = [];
         $url = "https://sukulive.com/";
         foreach ($mediaItems as $media) {
+            $user = $media->model_type::findOrFail($media->model_id);
             $path = "storage/{$media->id}/{$media->file_name}";
             $mediaUrl = asset($path);
             $mainData[] = [
+                "user_id" => $user->id,
+                "user_name" => $user->name,
+                "user_profile" => $user->profile_url ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
-                'original_url' =>$url.$mediaUrl
+                'original_url' => $url . $mediaUrl,
+                "like_count" => $media->likers()->count(),
+                "comment_count" => $media->comments()->count(),
             ];
         }
 
