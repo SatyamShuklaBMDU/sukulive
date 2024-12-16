@@ -57,6 +57,7 @@ class PostController extends Controller
             $path = "storage/{$media->id}/{$media->file_name}";
             $mediaUrl = asset($path);
             $mainData[] = [
+                "media_id" => $media->id,
                 "user_id" => $user->id,
                 "user_name" => $user->name,
                 "user_profile" => $user->profile_url ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
