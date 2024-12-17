@@ -50,7 +50,7 @@ Route::get('random/posts',[PostController::class,'randomPost'])->middleware('aut
 
 Route::post('posts/like-unlike', [LikeController::class, 'likeOrUnlikePost'])->middleware('auth:sanctum');
 Route::post('posts/add-comment', [CommentController::class, 'addComment'])->middleware('auth:sanctum');
-Route::get('posts/get-comment', [CommentController::class,'getComments'])->middleware('auth:sanctum');
+Route::post('posts/get-comment', [CommentController::class,'getComments'])->middleware('auth:sanctum');
 
 Route::get('notifications', [NotificationController::class, 'index'])->middleware('auth:sanctum');
 Route::get('get-plans', [PlansController::class, 'getPlans'])->middleware('auth:sanctum');
