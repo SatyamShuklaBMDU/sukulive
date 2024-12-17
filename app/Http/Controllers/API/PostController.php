@@ -55,7 +55,7 @@ class PostController extends Controller
         $status = null;
         $customer = Customer::findOrFail(Auth::id());
         foreach ($mediaItems as $media) {
-            if($customer->hasLiked($media->id)) {
+            if($customer->hasLiked($media)) {
                 $status = true;
             }else{
                 $status = false;
