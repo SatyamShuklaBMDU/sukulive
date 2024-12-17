@@ -52,7 +52,14 @@ class PostController extends Controller
         $mediaItems = Media::inRandomOrder()->get();
         $mainData = [];
         $url = "https://sukulive.com/";
+        $status = null;
+        $customer = Customer::findOrFail(Auth::id());
         foreach ($mediaItems as $media) {
+            if($customer->hasLiked($media->id)) {
+                $status = true;
+            }else{
+                $status = false;
+            }
             $user = $media->model_type::findOrFail($media->model_id);
             $path = "storage/{$media->id}/{$media->file_name}";
             $mediaUrl = asset($path);
@@ -66,6 +73,7 @@ class PostController extends Controller
                 'original_url' => $url . $mediaUrl,
                 "like_count" => $media->likers()->count(),
                 "comment_count" => $media->comments()->count(),
+                "like_status" => $status
             ];
         }
 
