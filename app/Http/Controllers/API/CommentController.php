@@ -30,7 +30,17 @@ class CommentController extends Controller
     {
         $posts = Media::findOrFail($request->post_id);
         $comments = $posts->comments;
-        return response()->json(['comments' => $comments], Response::HTTP_OK);
+        $data = [];
+        $comments->each(function ($item) {
+            $customer = Customer::findOrFail($item->user_id);
+            $data[] = [
+                'user_id' => $customer->id,
+                'user_name' => $customer->name,
+                'comment_id' => $item->commentable_id,
+                'comment' => $item->comment,
+            ];
+        });
+        return response()->json(['comments' => $data], Response::HTTP_OK);
     }
 
     public function deleteComment(Request $request)
@@ -39,6 +49,6 @@ class CommentController extends Controller
         $customer = Customer::findOrFail($login->id);
         $comment = $customer->comments()->findOrFail($request->comment_id);
         $comment->delete();
-        return response()->json(['message','Comment delete successfully.'],Response::HTTP_OK);
+        return response()->json(['message', 'Comment delete successfully.'], Response::HTTP_OK);
     }
 }
