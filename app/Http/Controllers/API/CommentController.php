@@ -31,7 +31,7 @@ class CommentController extends Controller
         $posts = Media::findOrFail($request->post_id);
         $comments = $posts->comments;
         $data = [];
-        $comments->each(function ($item) {
+        $comments->each(function ($item) use (&$data) {
             $customer = Customer::findOrFail($item->user_id);
             $data[] = [
                 'user_id' => $customer->id,
