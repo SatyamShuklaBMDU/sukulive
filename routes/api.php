@@ -79,4 +79,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('get-diamonds',[DiamondsControlller::class,'getDiamonds']);
 
     Route::get('get-gifts',[GiftController::class,'index']);
+
+    Route::post('send-gifts',[GiftController::class,'sendGift']);
 });
