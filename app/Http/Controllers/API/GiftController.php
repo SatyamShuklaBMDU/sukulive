@@ -46,7 +46,7 @@ class GiftController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'You do not have enough diamonds to send this gift.'
-            ], 200);
+            ], 400);
         }
         $receiverWallet = CustomerDiamonds::firstOrCreate(
             ['customer_id' => $receiverId],
