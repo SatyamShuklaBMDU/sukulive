@@ -81,7 +81,7 @@ class GiftController extends Controller
 
     public function receiverleaderboard(Request $request)
     {
-        $timeFilter = $request->input('filter', 'today');
+        $timeFilter = $request->query('filter', 'today');
         $startDate = match ($timeFilter) {
             'week' => now()->startOfWeek(),
             'month' => now()->startOfMonth(),
@@ -102,7 +102,7 @@ class GiftController extends Controller
 
     public function senderleaderboard(Request $request)
     {
-        $timeFilter = $request->input('filter', 'today');
+        $timeFilter = $request->query('filter', 'today');
         $startDate = match ($timeFilter) {
             'week' => now()->startOfWeek(),
             'month' => now()->startOfMonth(),
