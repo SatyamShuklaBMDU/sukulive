@@ -98,7 +98,7 @@ class VideoCallController extends Controller
         $liveId = $request->input("live_id");
         $userId = $request->input("user_id");
         $userName = $request->input("user_name");
-        LiveVideoCallJoiner::where('user_id', operator: $userId)
+        LiveVideoCallJoiner::where('user_id',  $userId)
             ->where('join_status', 'joined')
             ->update(['join_status' => 'quit', 'updated_at' => Carbon::now()]);
         $joinSession = LiveVideoCallJoiner::create([
@@ -108,10 +108,12 @@ class VideoCallController extends Controller
             'join_status' => 'joined',
             'join_date' => Carbon::now(),
         ]);
+        $liveuser = LiveVideCall::where('live_id', $liveId)->where('live_status','running')->whereDate('created_at',Carbon::now())->first();
         return response()->json([
             "status_code" => Response::HTTP_OK,
             "status" => true,
             "message" => "User successfully joined the live session.",
+            "user_id" => $liveuser->user_id,
             "data" => $joinSession,
         ], Response::HTTP_OK);
     }
@@ -119,7 +121,7 @@ class VideoCallController extends Controller
     public function getLiveVideos(Request $request)
     {
         $today = Carbon::today();
-        $data = LiveVideCall::whereDate("live_date", operator: $today)->where('live_status', 'running')->with('customer')->latest()->get();
+        $data = LiveVideCall::whereDate("live_date",  $today)->where('live_status', 'running')->with('customer')->latest()->get();
         $data->each(function ($video) {
             $video->customer->profile_pic = $video->customer->profile_pic ? $video->customer->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         });

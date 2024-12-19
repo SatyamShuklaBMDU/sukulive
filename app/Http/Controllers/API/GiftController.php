@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\CustomerDiamonds;
 use App\Models\Gift;
+use App\Models\GiftHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class GiftController extends Controller
@@ -37,7 +39,7 @@ class GiftController extends Controller
         $loggedInUser = auth()->user();
         $receiverId = $request->user_id;
         $gift = Gift::find($request->gift_id);
-        $diamondCost = $gift->price; 
+        $diamondCost = $gift->price;
         $senderWallet = $loggedInUser->diamonds;
 
         if (!$senderWallet || $senderWallet->available_diamonds < $diamondCost) {
@@ -57,6 +59,13 @@ class GiftController extends Controller
         $receiverWallet->available_diamonds += $diamondCost;
         $receiverWallet->save();
 
+        GiftHistory::create([
+            'sender_id' => $loggedInUser->id,
+            'receiver_id' => $receiverId,
+            'gift_id' => $gift->id,
+            'diamonds' => $diamondCost,
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Gift sent successfully.',
@@ -67,6 +76,49 @@ class GiftController extends Controller
                 'sender_remaining_diamonds' => $senderWallet->available_diamonds,
                 'receiver_total_diamonds' => $receiverWallet->total_diamonds,
             ]
+        ]);
+    }
+
+    public function receiverleaderboard(Request $request)
+    {
+        $timeFilter = $request->input('filter', 'today');
+        $startDate = match ($timeFilter) {
+            'week' => now()->startOfWeek(),
+            'month' => now()->startOfMonth(),
+            default => now()->startOfDay(),
+        };
+        $leaderboard = GiftHistory::where('created_at', '>=', $startDate)
+            ->select('receiver_id', DB::raw('SUM(diamonds) as total_diamonds'))
+            ->groupBy('receiver_id')
+            ->orderByDesc('total_diamonds')
+            ->take(10)
+            ->with('receiver')
+            ->get();
+        return response()->json([
+            'success' => true,
+            'data' => $leaderboard,
+        ]);
+    }
+
+    public function senderleaderboard(Request $request)
+    {
+        $timeFilter = $request->input('filter', 'today');
+        $startDate = match ($timeFilter) {
+            'week' => now()->startOfWeek(),
+            'month' => now()->startOfMonth(),
+            default => now()->startOfDay(),
+        };
+        $leaderboard = GiftHistory::where('created_at', '>=', $startDate)
+            ->select('sender_id', DB::raw('SUM(diamonds) as total_spent'))
+            ->groupBy('sender_id')
+            ->orderByDesc('total_spent')
+            ->take(10)
+            ->with('sender')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $leaderboard,
         ]);
     }
 }
