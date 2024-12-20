@@ -235,7 +235,7 @@ class LoginController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'profile_pic' => $user->profile_pic ? $this->path . $user->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+            'profile_pic' => $user->profile_pic ? $this->path . $user->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
             'total_followers' => $followersCount,
             'total_following' => $followingCount,
             'post_count' => $totalPostsCount,
@@ -260,7 +260,7 @@ class LoginController extends Controller
                 return [
                     'id' => $follower->id,
                     'name' => $follower->name,
-                    'profile_pic' => $follower->profile_pic ? $this->path . $follower->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                    'profile_pic' => $follower->profile_pic ? $this->path . $follower->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 ];
             });
 
@@ -271,7 +271,7 @@ class LoginController extends Controller
                 return $followedUser ? [
                     'id' => $followedUser->id,
                     'name' => $followedUser->name,
-                    'profile_pic' => $followedUser->profile_pic ? $this->path . $followedUser->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                    'profile_pic' => $followedUser->profile_pic ? $this->path . $followedUser->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 ] : null;
             });
 
