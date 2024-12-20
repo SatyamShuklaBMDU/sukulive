@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\CustomerDiamonds;
 use App\Models\Gift;
 use App\Models\GiftHistory;
@@ -102,6 +103,8 @@ class GiftController extends Controller
 
     public function senderleaderboard(Request $request)
     {
+        $login = auth()->user();
+        $user = Customer::findOrFail($login->id);
         $timeFilter = $request->query('filter', 'today');
         $startDate = match ($timeFilter) {
             'week' => now()->startOfWeek(),
@@ -114,8 +117,12 @@ class GiftController extends Controller
             ->orderByDesc('total_spent')
             ->take(10)
             ->with('sender')
-            ->get();
-
+            ->get()
+            ->map(function ($entry) use ($user) {
+                $sender = Customer::find($entry->sender_id);
+                $entry->is_following = $user->isFollowing($sender);
+                return $entry;
+            });
         return response()->json([
             'success' => true,
             'data' => $leaderboard,
@@ -130,8 +137,8 @@ class GiftController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-            'success' => false,
-            'message' => $validator->errors()
+                'success' => false,
+                'message' => $validator->errors()
             ], 400);
         }
         $topGifters = GiftHistory::select('sender_id', DB::raw('SUM(diamonds) as total_diamonds'))
