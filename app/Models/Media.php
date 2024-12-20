@@ -17,6 +17,6 @@ class Media extends BaseMedia
 
     public function likes()
     {
-        return $this->hasMany(Like::class);
+        return $this->hasMany(Like::class,'likeable_id');
     }
 }
