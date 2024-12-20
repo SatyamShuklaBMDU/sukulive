@@ -121,4 +121,29 @@ class GiftController extends Controller
             'data' => $leaderboard,
         ]);
     }
+
+    public function getTopGifters(Request $request, $liveVideoCallId)
+    {
+        $validator = Validator::make($request->all(), [
+            'liveVideoCallId' => 'required|integer|exists:live_video_calls,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+            'success' => false,
+            'message' => $validator->errors()
+            ], 400);
+        }
+        $topGifters = GiftHistory::select('sender_id', DB::raw('SUM(diamonds) as total_diamonds'))
+            ->where('live_video_call_id', $liveVideoCallId)
+            ->groupBy('sender_id')
+            ->orderBy('total_diamonds', 'desc')
+            ->take(10)
+            ->get();
+        $topGifters->load('sender');
+        return response()->json([
+            'success' => true,
+            'data' => $topGifters,
+        ]);
+    }
 }

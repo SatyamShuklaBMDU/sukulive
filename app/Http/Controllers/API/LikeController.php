@@ -21,7 +21,7 @@ class LikeController extends Controller
             $customer->like($post);
             $message = 'Post liked successfully';
         }
-        $likeCount = $post->likers()->count();
+        $likeCount = $post->likes()->count();
         return response()->json([
             'message' => $message,
             'total_likes' => $likeCount,

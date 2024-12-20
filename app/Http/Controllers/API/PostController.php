@@ -71,7 +71,7 @@ class PostController extends Controller
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
                 'original_url' => $url . $mediaUrl,
-                "like_count" => $media->likers()->count(),
+                "like_count" => $media->likes()->count(),
                 "comment_count" => $media->comments()->count(),
                 "like_status" => $status
             ];
