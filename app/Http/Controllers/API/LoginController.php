@@ -200,11 +200,12 @@ class LoginController extends Controller
             ->count();
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
         $totalPosts = $user->getMedia('posts')->map(function ($media) {
+            $postpath = "storage/{$media->id}/{$media->file_name}";
             return [
                 'id' => $media->id,
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
-                'original_url' => $media->getUrl(),
+                'original_url' => $this->path . $postpath,
             ];
         });
         $stories = Story::where('customers_id', $id)
