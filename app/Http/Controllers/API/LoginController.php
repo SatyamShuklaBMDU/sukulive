@@ -145,11 +145,12 @@ class LoginController extends Controller
             ->count();
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
         $totalPosts = $user->getMedia('posts')->map(function ($media) {
+            $postpath = "storage/{$media->id}/{$media->file_name}";
             return [
                 'id' => $media->id,
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
-                'original_url' => $media->getUrl(),
+                'original_url' => $this->path . $postpath,
             ];
         });
         $stories = Story::where('customers_id', $login->id)
@@ -258,7 +259,7 @@ class LoginController extends Controller
                 return [
                     'id' => $follower->id,
                     'name' => $follower->name,
-                    'profile_pic' => $follower->profile_pic ? $this->path.$follower->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                    'profile_pic' => $follower->profile_pic ? $this->path . $follower->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 ];
             });
 
@@ -269,7 +270,7 @@ class LoginController extends Controller
                 return $followedUser ? [
                     'id' => $followedUser->id,
                     'name' => $followedUser->name,
-                    'profile_pic' => $followedUser->profile_pic ? $this->path.$followedUser->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                    'profile_pic' => $followedUser->profile_pic ? $this->path . $followedUser->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 ] : null;
             });
 
