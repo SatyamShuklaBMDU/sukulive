@@ -180,7 +180,7 @@ class LoginController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'profile_pic' => $user->profile_pic ? $this->path . $user->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+            'profile_pic' => $user->profile_pic ? $this->path . $user->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
             'total_followers' => $followersCount,
             'total_following' => $followingCount,
             'post_count' => $totalPostsCount,
