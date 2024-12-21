@@ -126,7 +126,7 @@ class LoginController extends Controller
     {
         $customers = Customer::where('id', '!=', Auth::user()->id)->where('status', true)->latest()->get();
         $customers->each(function ($customer) {
-            $customer->profile_pic = $customer->profile_pic ? $this->path . $customer->profilr_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+            $customer->profile_pic = $customer->profile_pic ? $this->path . $customer->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
         });
         return response()->json([
             'status' => true,
@@ -151,6 +151,8 @@ class LoginController extends Controller
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
                 'original_url' => $this->path . $postpath,
+                'like_count' => $media->likes()->count(),
+                'comment_count' => $media->comments()->count(),
             ];
         });
         $stories = Story::where('customers_id', $login->id)
@@ -192,6 +194,8 @@ class LoginController extends Controller
 
     public function getProfileById($id)
     {
+        $login = Auth::user();
+        $loginUser = Customer::findOrFail($login->id);
         $user = Customer::findOrFail($id);
         $followingCount = $user->followings()->count();
         $followersCount = DB::table('followables')
@@ -206,6 +210,8 @@ class LoginController extends Controller
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
                 'original_url' => $this->path . $postpath,
+                'like_count' => $media->likes()->count(),
+                'comment_count' => $media->comments()->count(),
             ];
         });
         $stories = Story::where('customers_id', $id)
@@ -241,6 +247,8 @@ class LoginController extends Controller
             'post_count' => $totalPostsCount,
             'total_posts' => $totalPosts,
             'stories' => $storiesList,
+            'is_following' => $loginUser->isFollowing($user),
+            'is_followed_by' => $user->isFollowedBy($loginUser),
         ];
 
         return response()->json($data, Response::HTTP_OK);
@@ -249,18 +257,18 @@ class LoginController extends Controller
     public function followerfollowing($id)
     {
         $user = Customer::findOrFail($id);
-
         $followers = DB::table('followables')
             ->join('customers', 'followables.user_id', '=', 'customers.id')
             ->where('followables.followable_id', $user->id)
             ->where('followables.followable_type', 'App\Models\Customer')
             ->select('customers.id', 'customers.name', 'customers.profile_pic')
             ->paginate(1)
-            ->through(function ($follower) {
+            ->through(function ($follower) use( $user) {
                 return [
                     'id' => $follower->id,
                     'name' => $follower->name,
                     'profile_pic' => $follower->profile_pic ? $this->path . $follower->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                    'is_following' => $user->isFollowing(Customer::find($follower->id)),
                 ];
             });
 
