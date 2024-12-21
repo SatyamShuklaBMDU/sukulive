@@ -120,7 +120,7 @@ class GiftController extends Controller
             ->get()
             ->map(function ($entry) use ($user) {
                 $sender = Customer::find($entry->sender_id);
-                $sender->profile_pic = $sender->profile_pic ? 'https://sukulive.com/' . $sender->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+                $entry->profile_pic = $sender->profile_pic ? 'https://sukulive.com/' . $sender->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
                 $entry->is_following = $user->isFollowing($sender);
                 return $entry;
             });

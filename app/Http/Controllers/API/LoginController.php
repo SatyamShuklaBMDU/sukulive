@@ -151,8 +151,8 @@ class LoginController extends Controller
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
                 'original_url' => $this->path . $postpath,
-                // 'like_count' => $media->likes()->count(),
-                // 'comment_count' => $media->comments()->count(),
+                'like_count' => $media->likes()->count(),
+                'comment_count' => $media->comments()->count(),
             ];
         });
         $stories = Story::where('customers_id', $login->id)
