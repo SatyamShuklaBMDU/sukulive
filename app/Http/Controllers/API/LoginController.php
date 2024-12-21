@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Media;
 use App\Models\Story;
 use App\Models\Wallet;
+use BeyondCode\Comments\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -151,8 +153,8 @@ class LoginController extends Controller
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
                 'original_url' => $this->path . $postpath,
-                'like_count' => $media->likes()->count(),
-                'comment_count' => $media->comments()->count(),
+                'like_count' => Media::find($media->id)->likes()->count(),
+                'comment_count' => Comment::where('commentable_id', $media->id)->count(),
             ];
         });
         $stories = Story::where('customers_id', $login->id)
@@ -210,8 +212,8 @@ class LoginController extends Controller
                 'file_name' => $media->file_name,
                 'uuid' => $media->uuid,
                 'original_url' => $this->path . $postpath,
-                // 'like_count' => $media->likes()->count(),
-                // 'comment_count' => $media->comments()->count(),
+                'like_count' => Media::find($media->id)->likes()->count(),
+                'comment_count' => Comment::where('commentable_id', $media->id)->count(),
             ];
         });
         $stories = Story::where('customers_id', $id)
