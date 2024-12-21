@@ -146,7 +146,7 @@ class LoginController extends Controller
             ->where('followable_type', 'App\Models\Customer')
             ->count();
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
-        $totalPosts = $user->getMedia('posts')->map(function ($media) {
+        $totalPosts = $user->getMedia('posts')->map(function ($media) use ($user) {
             $postpath = "storage/{$media->id}/{$media->file_name}";
             return [
                 'id' => $media->id,
@@ -155,6 +155,7 @@ class LoginController extends Controller
                 'original_url' => $this->path . $postpath,
                 'like_count' => Media::find($media->id)->likes()->count(),
                 'comment_count' => Comment::where('commentable_id', $media->id)->count(),
+                'is_like' => Media::find($media->id)->isLikedBy($user),
             ];
         });
         $stories = Story::where('customers_id', $login->id)
@@ -205,7 +206,7 @@ class LoginController extends Controller
             ->where('followable_type', 'App\Models\Customer')
             ->count();
         $totalPostsCount = $user->media()->where('collection_name', 'posts')->count();
-        $totalPosts = $user->getMedia('posts')->map(function ($media) {
+        $totalPosts = $user->getMedia('posts')->map(function ($media) use ($loginUser) {
             $postpath = "storage/{$media->id}/{$media->file_name}";
             return [
                 'id' => $media->id,
@@ -214,6 +215,7 @@ class LoginController extends Controller
                 'original_url' => $this->path . $postpath,
                 'like_count' => Media::find($media->id)->likes()->count(),
                 'comment_count' => Comment::where('commentable_id', $media->id)->count(),
+                'is_like' => Media::find($media->id)->isLikedBy($loginUser),
             ];
         });
         $stories = Story::where('customers_id', $id)
@@ -267,7 +269,7 @@ class LoginController extends Controller
             ->where('followables.followable_type', 'App\Models\Customer')
             ->select('customers.id', 'customers.name', 'customers.profile_pic')
             ->paginate(20)
-            ->through(function ($follower) use($loginUser) {
+            ->through(function ($follower) use ($loginUser) {
                 return [
                     'id' => $follower->id,
                     'name' => $follower->name,
