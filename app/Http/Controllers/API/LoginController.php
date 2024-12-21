@@ -258,6 +258,8 @@ class LoginController extends Controller
 
     public function followerfollowing($id)
     {
+        $login = Auth::user();
+        $loginUser = Customer::findOrFail($login->id);
         $user = Customer::findOrFail($id);
         $followers = DB::table('followables')
             ->join('customers', 'followables.user_id', '=', 'customers.id')
@@ -265,23 +267,24 @@ class LoginController extends Controller
             ->where('followables.followable_type', 'App\Models\Customer')
             ->select('customers.id', 'customers.name', 'customers.profile_pic')
             ->paginate(20)
-            ->through(function ($follower) use( $user) {
+            ->through(function ($follower) use($loginUser) {
                 return [
                     'id' => $follower->id,
                     'name' => $follower->name,
                     'profile_pic' => $follower->profile_pic ? $this->path . $follower->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-                    'is_following' => $user->isFollowing(Customer::find($follower->id)),
+                    'is_following' => $loginUser->isFollowing(Customer::find($follower->id)),
                 ];
             });
 
         $followings = $user->followings()
             ->paginate(20)
-            ->through(function ($following) {
+            ->through(function ($following) use ($loginUser) {
                 $followedUser = Customer::find($following->followable_id);
                 return $followedUser ? [
                     'id' => $followedUser->id,
                     'name' => $followedUser->name,
                     'profile_pic' => $followedUser->profile_pic ? $this->path . $followedUser->profile_pic : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                    'is_following' => $loginUser->isFollowing(Customer::find($followedUser->id)),
                 ] : null;
             });
 
