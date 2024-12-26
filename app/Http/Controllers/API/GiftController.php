@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\CustomerDiamonds;
 use App\Models\Gift;
 use App\Models\GiftHistory;
+use App\Models\GoldCoinWallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -49,15 +50,15 @@ class GiftController extends Controller
                 'message' => 'You do not have enough diamonds to send this gift.'
             ], 400);
         }
-        $receiverWallet = CustomerDiamonds::firstOrCreate(
+        $receiverWallet = GoldCoinWallet::firstOrCreate(
             ['customer_id' => $receiverId],
-            ['total_diamonds' => 0, 'used_diamonds' => 0, 'available_diamonds' => 0]
+            ['total_gold_coin' => 0, 'used_gold_coin' => 0, 'available_gold_coin' => 0]
         );
         $senderWallet->used_diamonds += $diamondCost;
         $senderWallet->available_diamonds -= $diamondCost;
         $senderWallet->save();
-        $receiverWallet->total_diamonds += $diamondCost;
-        $receiverWallet->available_diamonds += $diamondCost;
+        $receiverWallet->total_gold_coin += $diamondCost;
+        $receiverWallet->available_gold_coin += $diamondCost;
         $receiverWallet->save();
 
         GiftHistory::create([
@@ -152,6 +153,19 @@ class GiftController extends Controller
         return response()->json([
             'success' => true,
             'data' => $topGifters,
+        ]);
+    }
+
+    public function getGoldWallet(Request $request)
+    {
+        $user = auth()->user();
+        $wallet = GoldCoinWallet::firstOrCreate(
+            ['customer_id' => $user->id],
+            ['total_gold_coin' => 0, 'used_gold_coin' => 0, 'available_gold_coin' => 0]
+        );
+        return response()->json([
+            'success' => true,
+            'data' => $wallet,
         ]);
     }
 }

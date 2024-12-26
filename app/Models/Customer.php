@@ -36,4 +36,9 @@ class Customer extends Authenticatable implements HasMedia
     {
         return $this->hasOne(CustomerDiamonds::class,'customer_id', 'id');
     }
+
+    public function goldCoins()
+    {
+        return $this->hasOne(GoldCoinWallet::class, 'customer_id', 'id');
+    }
 }

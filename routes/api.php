@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('get-gifts',[GiftController::class,'index']);
 
+    Route::get('get-gold-wallet',[GiftController::class,'getGoldWallet']);
     Route::post('send-gifts',[GiftController::class,'sendGift']);
     Route::get('receiver-leaderboard',[GiftController::class,'receiverleaderboard']);
     Route::get('sender-leaderboard',[GiftController::class,'senderleaderboard']);
