@@ -102,6 +102,12 @@
                                                         <button class="btn btn-primary"
                                                             onclick="deleteNotification({{ $plan->id }})">Delete</button>
                                                     </td>
+
+                                                    <td>
+                                                        <a href="#" class="btn btn-warning btn-sm" title="View">
+                                                            <i class="fas fa-add"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

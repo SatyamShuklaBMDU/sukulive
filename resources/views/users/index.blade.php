@@ -81,6 +81,7 @@
                                                 <th>Email</th>
                                                 <th>Phone Number</th>
                                                 <th>Account Status</th>
+                                                <th>Plans</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -122,6 +123,14 @@
                                                                 class="checktoggle">checkbox</label>
                                                         </div>
                                                     </td>
+
+                                                    <td>
+                                                        <a href="{{ route('users.view', $user->id) }}" class="btn btn-warning btn-sm" title="View">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        
+                                                    </td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>

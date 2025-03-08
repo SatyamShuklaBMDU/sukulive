@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class GoldCoinWallet extends Model
 {
     use HasFactory;
+  
+    protected $table = 'gold_coin_wallets';
     protected $guarded = [];
 
     public function customer()

@@ -27,6 +27,51 @@ class UserController extends Controller
         }
     }
 
+    public function viewSingleUser($id)
+    {
+       
+        $customer = Customer::with([
+            'wallet.transactions',
+            'goldCoinWallet',
+            'liveVideCall',
+            'liveVideoCallJoiner',
+            'subscription',
+            'likes'
+        ])->find($id);
+    
+        if (!$customer) {
+            return redirect()->back()->with('error', 'User not found!');
+        }
+        $followers = $customer->followers()->get();
+        $followings = $customer->followings()->get();
+       
+        $media = $customer->getMedia('posts')->map(function ($media) {
+            return [
+                'id'                 => $media->id,
+                'model_type'         => $media->model_type,
+                'model_id'           => $media->model_id,
+                'uuid'               => $media->uuid,
+                'collection_name'    => $media->collection_name,
+                'name'               => $media->name,
+                'file_name'          => $media->file_name,
+                'mime_type'          => $media->mime_type,
+                'disk'               => $media->disk,
+                'conversions_disk'   => $media->conversions_disk,
+                'size'               => $media->size,
+                'manipulations'      => json_encode($media->manipulations), 
+                'custom_properties'  => json_encode($media->custom_properties), 
+                'generated_conversions' => json_encode($media->generated_conversions),
+                'responsive_images'  => json_encode($media->responsive_images),
+                'order_column'       => $media->order_column,
+                'created_at'         => $media->created_at->format('Y-m-d H:i:s'),
+                'updated_at'         => $media->updated_at->format('Y-m-d H:i:s'),
+                'url'                => $media->getUrl(),
+            ];
+        });
+    
+        return view('users.view', compact('customer', 'media'));
+    }
+    
     public function filterData(Request $request)
     {
         $request->validate([

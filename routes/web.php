@@ -46,6 +46,7 @@ Route::prefix("admin")->group(function () {
 
         Route::get('user', [UserController::class, 'index'])->name('user.index');
         Route::post('/update-status/{id}', [UserController::class, 'updateStatus'])->name('update.status');
+        Route::get('/view-detalis/{id}',[UserController::class,'viewSingleUser'])->name('users.view');
         Route::post('/filter-user', [UserController::class, 'filterdata'])->name('filter-user');
 
         Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
@@ -85,6 +86,9 @@ Route::prefix("admin")->group(function () {
 
 
         Route::get('chat', [MessageController::class, 'showChatRoom']);
+
+        // single transactions
+        Route::get('transactions',[UserController::class,'transactions'])->name('users.transactions');
     });
     // Route::post('/update-plan/{id}', [UserController::class, 'updatePlan'])->name('update.plan.status');
 });
