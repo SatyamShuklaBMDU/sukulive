@@ -40,32 +40,53 @@ class UserController extends Controller
             'subscription',
             'likes'
         ])->find($id);
+
         if (!$customer) {
             return redirect()->back()->with('error', 'User not found!');
         }
-        $followers = $customer->followers()->get();
-        $followings = $customer->followings()->get();
-        $postcount = $customer->media()->where('collection_name', 'posts')->count();
+
+        $followers = $customer->followers()->get() ?? collect([]);
+        $followings = $customer->followings()->get() ?? collect([]);
+        $postcount = $customer->media()->where('collection_name', 'posts')->count() ?? 0;
+
         $stories = Story::where('customers_id', $customer->id)
             ->where('expires_at', '>', now())
             ->orderByDesc('created_at')
-            ->get();
+            ->get() ?? collect([]);
+
         $wallet = $customer->wallet;
-        $wallet_balance = $wallet->balance ?? 0;
-        $total_credits = Transaction::where('wallet_id', $wallet->id)->where('transaction_type', 'credit')->sum('amount');
-        $total_debits = Transaction::where('wallet_id', $wallet->id)->where('transaction_type', 'debit')->sum('amount');
+        $wallet_balance = $wallet?->balance ?? 0;
+        $total_credits = Transaction::where('wallet_id', $wallet?->id)->where('transaction_type', 'credit')->sum('amount') ?? 0;
+        $total_debits = Transaction::where('wallet_id', $wallet?->id)->where('transaction_type', 'debit')->sum('amount') ?? 0;
+
         $available_balance = $wallet_balance;
         $used_balance = $total_debits;
-        $transactions = Transaction::where('wallet_id', $wallet->id)
+
+        $goldWallet = $customer->goldCoins;
+        $goldData = [
+            'total_gold' => $goldWallet?->total_gold_coin ?? 0,
+            'used_gold' => $goldWallet?->used_gold_coin ?? 0,
+            'available_gold' => $goldWallet?->available_gold_coin ?? 0,
+        ];
+
+        $diamonds = $customer->diamonds;
+        $diamondData = [
+            'total_diamond' => $diamonds?->total_diamonds ?? 0,
+            'used_diamond' => $diamonds?->used_diamonds ?? 0,
+            'available_diamond' => $diamonds?->available_diamonds ?? 0,
+        ];
+
+        $transactions = Transaction::where('wallet_id', $wallet?->id)
             ->select('amount', 'transaction_type', 'created_at')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get() ?? collect([]);
 
         $media = $customer->getMedia('posts')->map(function ($media) {
-            $mediaMain = Media::findOrFail($media->id);
+            $mediaMain = Media::find($media->id);
             $url = url('/');
             $path = "storage/{$media->id}/{$media->file_name}";
             $mediaUrl = asset($path);
+
             return [
                 'id'                 => $media->id,
                 'model_type'         => $media->model_type,
@@ -78,21 +99,36 @@ class UserController extends Controller
                 'disk'               => $media->disk,
                 'conversions_disk'   => $media->conversions_disk,
                 'size'               => $media->size,
-                'manipulations'      => json_encode($media->manipulations),
-                'custom_properties'  => json_encode($media->custom_properties),
-                'generated_conversions' => json_encode($media->generated_conversions),
-                'responsive_images'  => json_encode($media->responsive_images),
+                'manipulations'      => json_encode($media->manipulations ?? []),
+                'custom_properties'  => json_encode($media->custom_properties ?? []),
+                'generated_conversions' => json_encode($media->generated_conversions ?? []),
+                'responsive_images'  => json_encode($media->responsive_images ?? []),
                 'order_column'       => $media->order_column,
                 'created_at'         => $media->created_at->format('Y-m-d H:i:s'),
                 'updated_at'         => $media->updated_at->format('Y-m-d H:i:s'),
                 'url'                => $url . $mediaUrl,
-                'likes_count'        => $mediaMain->likers()->count(),
-                'comments'           => $mediaMain->comments
-
+                'likes_count'        => $mediaMain?->likers()->count() ?? 0,
+                'comments'           => $mediaMain?->comments ?? collect([])
             ];
         });
-        return view('users.view', compact('customer', 'media', 'followers', 'followings', 'postcount', 'stories', 'wallet_balance', 'available_balance', 'used_balance', 'transactions','total_credits'));
+
+        return view('users.view', compact(
+            'customer',
+            'media',
+            'followers',
+            'followings',
+            'postcount',
+            'stories',
+            'wallet_balance',
+            'available_balance',
+            'used_balance',
+            'transactions',
+            'total_credits',
+            'goldData',
+            'diamondData'
+        ));
     }
+
 
 
     public function filterData(Request $request)

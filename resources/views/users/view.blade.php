@@ -202,6 +202,8 @@
                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#followers">Followers</a></li>
                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#following">Following</a></li>
                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#wallet">Wallet</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#goldwallet">Gold Wallet</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#diamondwallet">Diamond Wallet</a></li>
             </ul>
 
             <div class="tab-content">
@@ -341,6 +343,60 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Gold Wallet Tab --}}
+                <div id="goldwallet" class="tab-pane fade">
+                    <div class="card shadow-sm mt-3 p-4">
+                        <h4 class="mb-3">💰 Gold Wallet Overview</h4>
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-primary text-white p-3 rounded">
+                                    <h6>Total Gold Coin</h6>
+                                    <h3>🪙{{ number_format($goldData['total_gold'], 2) }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-success text-white p-3 rounded">
+                                    <h6>Available Gold Coin </h6>
+                                    <h3>🪙{{ number_format($goldData['available_gold'], 2) }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-danger text-white p-3 rounded">
+                                    <h6>Used Gold Coin</h6>
+                                    <h3>🪙{{ number_format($goldData['used_gold'], 2) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Diamond Wallet --}}
+                <div id="diamondwallet" class="tab-pane fade">
+                    <div class="card shadow-sm mt-3 p-4">
+                        <h4 class="mb-3">💰 Diamond Wallet Overview</h4>
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-primary text-white p-3 rounded">
+                                    <h6>Total Diamonds</h6>
+                                    <h3>💎{{ number_format($diamondData['total_diamond'], 2) }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-success text-white p-3 rounded">
+                                    <h6>Available Diamonds </h6>
+                                    <h3>💎{{ number_format($diamondData['used_diamond'], 2) }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-danger text-white p-3 rounded">
+                                    <h6>Used Diamonds</h6>
+                                    <h3>💎{{ number_format($diamondData['available_diamond'], 2) }}</h3>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
