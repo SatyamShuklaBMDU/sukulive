@@ -115,6 +115,20 @@
             margin: 5px 0;
             border-radius: 5px;
         }
+
+        .post-item img,
+        .post-item video {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .post-item video {
+            background: #000;
+        }
     </style>
 @endsection
 
@@ -202,7 +216,8 @@
                                 @endphp
                                 @if ($isVideo)
                                     <video class="video-thumbnail" src="{{ $post['url'] }}"
-                                        poster="https://img.freepik.com/premium-photo/laptop-mockup-movie-camera-video-editing-cuts-footage-sound-music-via-computer-cartoon-cute-smooth-pink-background-motion-vlog-movie-clapper-board-3d-render-illustration_598821-1134.jpg?w=1480" muted></video>
+                                        poster="https://img.freepik.com/premium-photo/laptop-mockup-movie-camera-video-editing-cuts-footage-sound-music-via-computer-cartoon-cute-smooth-pink-background-motion-vlog-movie-clapper-board-3d-render-illustration_598821-1134.jpg?w=1480"
+                                        muted></video>
                                 @else
                                     <img src="{{ $post['url'] }}" alt="Post">
                                 @endif
