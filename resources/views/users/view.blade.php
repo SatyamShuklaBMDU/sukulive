@@ -421,13 +421,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll(".post-video").forEach(video => {
-                video.addEventListener("click", function() {
-                    if (video.paused) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
-                });
+                // video.addEventListener("click", function() {
+                //     if (video.paused) {
+                //         video.play();
+                //     } else {
+                //         video.pause();
+                //     }
+                // });
 
                 // Handle mute/unmute
                 let muteBtn = video.nextElementSibling;
