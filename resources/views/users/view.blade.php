@@ -271,7 +271,7 @@
                     <ul>
                         {{-- @dd($followers) --}}
                         @foreach ($followers as $follower)
-                            <li>{{ $follower->name }} ({{ $follower->email }})</li>
+                            <li>{{ $follower['name'] }} ({{ $follower['phone'] }})</li>
                         @endforeach
                     </ul>
                 </div>
@@ -281,7 +281,7 @@
                     <ul>
                         {{-- @dd($followings) --}}
                         @foreach ($followings as $following)
-                            <li>{{ $following->followable_type::find($following->followable_id)->name }} ({{ $following->followable_type::find($following->followable_id)->email }})</li>
+                            <li>{{ $following['name'] }} ({{ $following['phone'] }})</li>
                         @endforeach
                     </ul>
                 </div>

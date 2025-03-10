@@ -8,6 +8,7 @@ use App\Models\Story;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -44,9 +45,29 @@ class UserController extends Controller
         if (!$customer) {
             return redirect()->back()->with('error', 'User not found!');
         }
-
-        $followers = $customer->followers()->get() ?? collect([]);
-        $followings = $customer->followings()->get() ?? collect([]);
+        $followers = DB::table('followables')
+            ->join('customers', 'followables.user_id', '=', 'customers.id')
+            ->where('followables.followable_id', $customer->id)
+            ->where('followables.followable_type', 'App\Models\Customer')
+            ->select('customers.id', 'customers.name', 'customers.profile_pic')
+            ->get()
+            ->map(function ($follower) {
+                return [
+                    'id' => $follower->id,
+                    'name' => $follower->name,
+                    'phone' => $follower->phone_number,
+                ];
+            });
+        $followings = $customer->followings()
+            ->get()
+            ->map(function ($following) {
+                $followedUser = Customer::find($following->followable_id);
+                return $followedUser ? [
+                    'id' => $followedUser->id,
+                    'name' => $followedUser->name,
+                    'phone' => $followedUser->phone_number,
+                ] : null;
+            });
         $postcount = $customer->media()->where('collection_name', 'posts')->count() ?? 0;
 
         $stories = Story::where('customers_id', $customer->id)
@@ -128,8 +149,6 @@ class UserController extends Controller
             'diamondData'
         ));
     }
-
-
 
     public function filterData(Request $request)
     {
