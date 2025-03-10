@@ -202,7 +202,7 @@
                                 @endphp
                                 @if ($isVideo)
                                     <video class="video-thumbnail" src="{{ $post['url'] }}"
-                                        poster="your-default-thumbnail.jpg" muted></video>
+                                        poster="https://img.freepik.com/premium-photo/laptop-mockup-movie-camera-video-editing-cuts-footage-sound-music-via-computer-cartoon-cute-smooth-pink-background-motion-vlog-movie-clapper-board-3d-render-illustration_598821-1134.jpg?w=1480" muted></video>
                                 @else
                                     <img src="{{ $post['url'] }}" alt="Post">
                                 @endif
