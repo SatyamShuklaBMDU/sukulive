@@ -146,8 +146,10 @@
             background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            padding: 5px;
+            padding: 8px 10px;
             cursor: pointer;
+            border-radius: 50%;
+            font-size: 16px;
         }
     </style>
 @endsection
@@ -253,11 +255,15 @@
                                         </div>
                                         <div class="modal-body">
                                             @if ($isVideo)
-                                                <video class="post-video" width="400" height="250" loop muted>
-                                                    <source src="{{ $post['url'] }}" type="video/mp4">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                                <button class="mute-btn">🔇</button>
+                                                <div class="position-relative">
+                                                    <video id="postVideo{{ $post['id'] }}" class="post-video"
+                                                        width="400" height="250" autoplay muted loop playsinline>
+                                                        <source src="{{ $post['url'] }}" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                    <button class="mute-btn"
+                                                        onclick="toggleMute({{ $post['id'] }})">🔇</button>
+                                                </div>
                                             @else
                                                 <img src="{{ $post['url'] }}" alt="Post">
                                             @endif
@@ -419,23 +425,16 @@
 @endsection
 @section('script-area')
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll(".post-video").forEach(video => {
-                // video.addEventListener("click", function() {
-                //     if (video.paused) {
-                //         video.play();
-                //     } else {
-                //         video.pause();
-                //     }
-                // });
-
-                // Handle mute/unmute
-                let muteBtn = video.nextElementSibling;
-                muteBtn.addEventListener("click", function() {
-                    video.muted = !video.muted;
-                    muteBtn.textContent = video.muted ? "🔇" : "🔊";
-                });
-            });
-        });
+        function toggleMute(postId) {
+            let video = document.getElementById('postVideo' + postId);
+            let btn = document.querySelector(`#postVideo${postId} + .mute-btn`);
+            if (video.muted) {
+                video.muted = false;
+                btn.textContent = '🔊';
+            } else {
+                video.muted = true;
+                btn.textContent = '🔇';
+            }
+        }
     </script>
 @endsection
