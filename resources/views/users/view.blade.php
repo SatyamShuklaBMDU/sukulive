@@ -267,6 +267,7 @@
                 <!-- Followers Tab -->
                 <div id="followers" class="tab-pane fade">
                     <ul>
+                        {{-- @dd($followers) --}}
                         @foreach ($followers as $follower)
                             <li>{{ $follower->name }} ({{ $follower->email }})</li>
                         @endforeach
@@ -276,8 +277,9 @@
                 <!-- Following Tab -->
                 <div id="following" class="tab-pane fade">
                     <ul>
+                        {{-- @dd($followings) --}}
                         @foreach ($followings as $following)
-                            <li>{{ $following->name }} ({{ $following->email }})</li>
+                            <li>{{ $following->followable_type::find($following->followable_id)->name }} ({{ $following->followable_type::find($following->followable_id)->email }})</li>
                         @endforeach
                     </ul>
                 </div>
