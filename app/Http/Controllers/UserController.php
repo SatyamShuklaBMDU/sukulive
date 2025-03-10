@@ -49,7 +49,7 @@ class UserController extends Controller
             ->join('customers', 'followables.user_id', '=', 'customers.id')
             ->where('followables.followable_id', $customer->id)
             ->where('followables.followable_type', 'App\Models\Customer')
-            ->select('customers.id', 'customers.name', 'customers.profile_pic','customers.phone_number')
+            ->select('customers.id', 'customers.name', 'customers.profile_pic', 'customers.phone_number')
             ->get()
             ->map(function ($follower) {
                 return [
@@ -107,32 +107,20 @@ class UserController extends Controller
             $url = url('/');
             $path = "storage/{$media->id}/{$media->file_name}";
             $mediaUrl = asset($path);
-
             return [
-                'id'                 => $media->id,
-                'model_type'         => $media->model_type,
-                'model_id'           => $media->model_id,
-                'uuid'               => $media->uuid,
-                'collection_name'    => $media->collection_name,
-                'name'               => $media->name,
-                'file_name'          => $media->file_name,
-                'mime_type'          => $media->mime_type,
-                'disk'               => $media->disk,
-                'conversions_disk'   => $media->conversions_disk,
-                'size'               => $media->size,
-                'manipulations'      => json_encode($media->manipulations ?? []),
-                'custom_properties'  => json_encode($media->custom_properties ?? []),
-                'generated_conversions' => json_encode($media->generated_conversions ?? []),
-                'responsive_images'  => json_encode($media->responsive_images ?? []),
-                'order_column'       => $media->order_column,
-                'created_at'         => $media->created_at->format('Y-m-d H:i:s'),
-                'updated_at'         => $media->updated_at->format('Y-m-d H:i:s'),
-                'url'                => $url . $mediaUrl,
-                'likes_count'        => $mediaMain?->likers()->count() ?? 0,
-                'comments'           => $mediaMain?->comments ?? collect([])
+                'id' => $media->id,
+                'model_type' => $media->model_type,
+                'model_id' => $media->model_id,
+                'uuid' => $media->uuid,
+                'collection_name' => $media->collection_name,
+                'name' => $media->name,
+                'created_at' => $media->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $media->updated_at->format('Y-m-d H:i:s'),
+                'url' => $url . $mediaUrl,
+                'likes_count' => $mediaMain?->likers()->count() ?? 0,
+                'comments' => $mediaMain?->comments ?? collect([])
             ];
         });
-
         return view('users.view', compact(
             'customer',
             'media',
