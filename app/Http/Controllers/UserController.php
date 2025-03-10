@@ -29,7 +29,6 @@ class UserController extends Controller
 
     public function viewSingleUser($id)
     {
-       
         $customer = Customer::with([
             'wallet.transactions',
             'goldCoinWallet',
@@ -42,9 +41,10 @@ class UserController extends Controller
         if (!$customer) {
             return redirect()->back()->with('error', 'User not found!');
         }
+    
         $followers = $customer->followers()->get();
         $followings = $customer->followings()->get();
-       
+    
         $media = $customer->getMedia('posts')->map(function ($media) {
             return [
                 'id'                 => $media->id,
@@ -66,11 +66,13 @@ class UserController extends Controller
                 'created_at'         => $media->created_at->format('Y-m-d H:i:s'),
                 'updated_at'         => $media->updated_at->format('Y-m-d H:i:s'),
                 'url'                => $media->getUrl(),
+                'likes_count'        => $media->likes()->count(),  
             ];
         });
     
-        return view('users.view', compact('customer', 'media'));
+        return view('users.view', compact('customer', 'media', 'followers', 'followings'));
     }
+    
     
     public function filterData(Request $request)
     {

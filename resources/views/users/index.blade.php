@@ -81,7 +81,7 @@
                                                 <th>Email</th>
                                                 <th>Phone Number</th>
                                                 <th>Account Status</th>
-                                                <th>Plans</th>
+                                                <th>View</th>
                                             </tr>
                                         </thead>
                                         <tbody>

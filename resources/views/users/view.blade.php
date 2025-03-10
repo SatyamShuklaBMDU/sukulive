@@ -78,17 +78,12 @@
 
                                 <div class="col-md-6 text-md-end mt-3 mt-md-0">
                                     <h3>Total Followers: {{ $customer->followables->count() }}</h3>
-                                    
-                                   
-                                       
+                                    <h3>Total Likes: {{ $customer->likes->count() }}</h3>
+                                           
                                 </div>
-                                
-                                
                             </div>
                         </div>
-            
                         <hr>
-            
                         <!-- Customer Details Table -->
                         <h5>Customer Information</h5>
                         <div class="table-responsive">
