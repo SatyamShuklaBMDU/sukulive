@@ -251,7 +251,8 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Post Details</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                onclick="closePostModal({{ $post['id'] }})"></button>
                                         </div>
                                         <div class="modal-body">
                                             @if ($isVideo)
@@ -434,6 +435,15 @@
             } else {
                 video.muted = true;
                 btn.textContent = '🔇';
+            }
+        }
+
+        function closePostModal(postId) {
+            let modal = document.getElementById('postModal' + postId);
+            let video = document.getElementById('postVideo' + postId);
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
             }
         }
     </script>
