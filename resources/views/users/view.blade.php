@@ -275,7 +275,7 @@
                             <div class="col-md-4">
                                 <div class="wallet-box bg-primary text-white p-3 rounded">
                                     <h6>Total Balance</h6>
-                                    <h3>₹{{ number_format($wallet_balance, 2) }}</h3>
+                                    <h3>₹{{ number_format($total_credits, 2) }}</h3>
                                 </div>
                             </div>
                             <div class="col-md-4">

@@ -91,7 +91,7 @@ class UserController extends Controller
 
             ];
         });
-        return view('users.view', compact('customer', 'media', 'followers', 'followings', 'postcount', 'stories', 'wallet_balance', 'available_balance', 'used_balance', 'transactions'));
+        return view('users.view', compact('customer', 'media', 'followers', 'followings', 'postcount', 'stories', 'wallet_balance', 'available_balance', 'used_balance', 'transactions','total_credits'));
     }
 
 
