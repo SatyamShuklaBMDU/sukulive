@@ -49,7 +49,7 @@ class UserController extends Controller
             ->join('customers', 'followables.user_id', '=', 'customers.id')
             ->where('followables.followable_id', $customer->id)
             ->where('followables.followable_type', 'App\Models\Customer')
-            ->select('customers.id', 'customers.name', 'customers.profile_pic')
+            ->select('customers.id', 'customers.name', 'customers.profile_pic','customers.phone_number')
             ->get()
             ->map(function ($follower) {
                 return [
