@@ -40,7 +40,7 @@ class UserController extends Controller
             'liveVideoCallJoiner',
             'subscription',
             'likes'
-        ])->find($id);
+        ])->find(decrypt($id));
 
         if (!$customer) {
             return redirect()->back()->with('error', 'User not found!');
