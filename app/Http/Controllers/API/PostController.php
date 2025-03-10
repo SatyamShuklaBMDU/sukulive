@@ -41,23 +41,40 @@ class PostController extends Controller
     {
         $login = Auth::user();
         $customer = Customer::findOrFail($login->id);
-        $media = $customer->getMedia('posts')->map(function ($item) {
-            return $item->toArray();
-        })->toArray();
-        return response()->json(array_values($media));
+        $mediaItems = $customer->getMedia('posts');
+        $url = url('/');
+        $mainData = [];
+        foreach ($mediaItems as $media) {
+            $path = "storage/{$media->id}/{$media->file_name}";
+            $mediaUrl = asset($path);
+            $mainData[] = [
+                "media_id" => $media->id,
+                "file_name" => $media->file_name,
+                "uuid" => $media->uuid,
+                "original_url" => $url.$mediaUrl,
+                "size" => $media->size,
+                "mime_type" => $media->mime_type,
+                "created_at" => $media->created_at,
+                "updated_at" => $media->updated_at,
+            ];
+        }
+        return response()->json([
+            'media' => $mainData
+        ]);
     }
 
     public function randomPost(Request $request)
     {
         $mediaItems = Media::inRandomOrder()->get();
         $mainData = [];
-        $url = "https://sukulive.com/";
+        $url = url('/');
+        // dd(url());
         $status = null;
         $customer = Customer::findOrFail(Auth::id());
         foreach ($mediaItems as $media) {
-            if($customer->hasLiked($media)) {
+            if ($customer->hasLiked($media)) {
                 $status = true;
-            }else{
+            } else {
                 $status = false;
             }
             $user = $media->model_type::findOrFail($media->model_id);

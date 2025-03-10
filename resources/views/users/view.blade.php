@@ -2,257 +2,332 @@
 
 @section('style-area')
     <style>
-        .custom-breadcrumb {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
-        .custom-breadcrumb-item {
+        .profile-img-container {
+            position: relative;
             display: inline-block;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-        }
-
-        .custom-breadcrumb-item.active {
-            color: #212529;
-            font-weight: bold;
-        }
-
-        .custom-breadcrumb-item::before {
-            content: " / ";
-            color: #6c757d;
-            padding: 0 0.3rem;
-        }
-
-        .custom-breadcrumb-item:first-child::before {
-            content: "";
         }
 
         .profile-img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #ddd;
+            border: 3px solid #ddd;
+        }
+
+        .has-story {
+            border: 3px solid #FF4500;
+            padding: 3px;
+            cursor: pointer;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .tab-content {
+            margin-top: 20px;
+        }
+
+        .story-modal img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .post-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .post-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .post-item img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Custom Modal */
+        .modal-content {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-body img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-body .likes-comments {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .modal-body .comments {
+            margin-top: 15px;
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        .modal-body .comments ul {
+            list-style: none;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .modal-body .comments li {
+            background: #f1f1f1;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
         }
     </style>
 @endsection
 
 @section('content-area')
     <div class="page-wrapper">
-        <div class="content container-fluid">
-            
-            <!-- Page Header -->
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h3 class="page-title">User Details</h3>
-                        <nav aria-label="breadcrumb">
-                            <ol class="custom-breadcrumb">
-                                <li class="custom-breadcrumb-item">
-                                    <a href="{{ route('dashboard') }}">Dashboard</a>
-                                </li>
-                                <li class="custom-breadcrumb-item active" aria-current="page">User Details</li>
-                            </ol>
-                        </nav>
+        <div class="container mt-4">
+            <div class="card shadow-sm p-4">
+                <div class="profile-header">
+                    <div class="profile-img-container" data-bs-toggle="modal" data-bs-target="#storyModal">
+                        <img src="{{ asset($customer->profile_pic ?? 'assets/img/profiles/avatar-01.jpg') }}"
+                            class="profile-img {{ count($stories) > 0 ? 'has-story' : '' }}" alt="Profile">
+                    </div>
+                    <div>
+                        <h3>{{ $customer->name }}</h3>
+                        <p class="text-muted">{{ $customer->email }}</p>
+                        <div class="profile-stats">
+                            <strong>{{ $followers->count() }} Followers</strong>
+                            <strong>{{ $followings->count() }} Following</strong>
+                            <strong>{{ $postcount }} Posts</strong>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Profile Section -->
-            <div class="container">
-                <div class="card shadow-lg">
-                    <div class="card-body">
-                        
-                        <!-- User Profile -->
-                        <div class="row align-items-center mb-4">
-                            <div class="col-md-6 d-flex align-items-center">
-                                <img src="{{ asset($customer->profile_pic ?? 'default-profile.png') }}" class="profile-img me-3" alt="Profile">
-                                <div>
-                                    <h4 class="mb-1">{{ $customer->name }}</h4>
-                                    <p class="text-muted mb-0">{{ $customer->email }}</p>
-                                    <p class="text-muted">{{ $customer->phone_number }}</p>
-                                </div>
-
-                                <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                                    <h3>Total Followers: {{ $customer->followables->count() }}</h3>
-                                    <h3>Total Likes: {{ $customer->likes->count() }}</h3>
-                                           
+            <!-- Story Modal -->
+            @if (count($stories) > 0)
+                <div class="modal fade" id="storyModal" tabindex="-1" aria-labelledby="storyModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <div id="storyCarousel" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        @foreach ($stories as $index => $story)
+                                            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                                @php
+                                                    $mediaPath = asset($story->media_path);
+                                                @endphp
+                                                @if (!empty($story->caption))
+                                                    <div
+                                                        class="story-caption position-absolute top-0 start-50 translate-middle-x text-white p-2 bg-dark rounded">
+                                                        {{ $story->caption }}
+                                                    </div>
+                                                @endif
+                                                @if (Str::endsWith($story->media_path, ['.mp4', '.mov', '.avi']))
+                                                    <video autoplay muted loop playsinline class="img-fluid">
+                                                        <source src="{{ $mediaPath }}" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                @else
+                                                    <img src="{{ $mediaPath }}" class="img-fluid" alt="Story">
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#storyCarousel"
+                                        data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#storyCarousel"
+                                        data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <!-- Customer Details Table -->
-                        <h5>Customer Information</h5>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>Customer ID</th>
-                                        <td>{{ $customer->customer_id }}</td>
-                                        <th>Balance</th>
-                                        <td>{{ optional($customer->wallet)->balance ?? '0.00' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total Gold Coin</th>
-                                        <td>{{ optional($customer->goldCoinWallet)->total_gold_coin ?? '0' }}</td>
-                                        <th>Used Gold Coin</th>
-                                        <td>{{ optional($customer->goldCoinWallet)->used_gold_coin ?? '0' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Available Gold Coin</th>
-                                        <td>{{ optional($customer->goldCoinWallet)->available_gold_coin ?? '0' }}</td>
-                                        <th>Plan ID</th>
-                                        <td>{{ optional($customer->subscription)->plan_id ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Subscription Start</th>
-                                        <td>{{ optional($customer->subscription)->started_at ?? 'N/A' }}</td>
-                                        <th>Subscription Expiry</th>
-                                        <td>{{ optional($customer->subscription)->expires_at ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Subscription Status</th>
-                                        <td colspan="3">
-                                            <span class="badge {{ optional($customer->subscription)->is_active ? 'bg-success' : 'bg-danger' }}">
-                                                {{ optional($customer->subscription)->is_active ? 'Active' : 'Inactive' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-            
-                        <!-- Live Video Calls -->
-                        <h5 class="mt-4">Live Video Call Details</h5>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>Live ID</th>
-                                        <td>{{ optional($customer->liveVideoCall)->live_id ?? 'N/A' }}</td>
-                                        <th>Live User Name</th>
-                                        <td>{{ optional($customer->liveVideoCall)->user_name ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Live Status</th>
-                                        <td>{{ optional($customer->liveVideoCall)->live_status ?? 'N/A' }}</td>
-                                        <th>Live Date</th>
-                                        <td>{{ optional($customer->liveVideoCall)->live_date ?? 'N/A' }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-            
-                        <!-- Live Video Call Joiners -->
-                        <h5 class="mt-4">Live Video Call Joiner Details</h5>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th>Joiner ID</th>
-                                        <td>{{ optional($customer->liveVideoCallJoiner)->live_id ?? 'N/A' }}</td>
-                                        <th>Joiner Name</th>
-                                        <td>{{ optional($customer->liveVideoCallJoiner)->user_name ?? 'N/A' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Join Status</th>
-                                        <td>{{ optional($customer->liveVideoCallJoiner)->join_status ?? 'N/A' }}</td>
-                                        <th>Join Date</th>
-                                        <td>{{ optional($customer->liveVideoCallJoiner)->join_date ?? 'N/A' }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    </div>
+                </div>
+            @endif
+            <!-- Tabs -->
+            <ul class="nav nav-tabs mt-3" id="profileTabs">
+                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#posts">Posts</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#followers">Followers</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#following">Following</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#wallet">Wallet</a></li>
+            </ul>
 
-                        <!-- Uploaded Media -->
-                        <h5 class="mt-4">Uploaded Media</h5>
+            <div class="tab-content">
+                <!-- Posts Tab -->
+                <div id="posts" class="tab-pane fade show active">
+                    <div class="post-gallery mt-3">
+                        @foreach ($media as $post)
+                            <div class="post-item" data-bs-toggle="modal" data-bs-target="#postModal{{ $post['id'] }}">
+                                @php
+                                    $fileExtension = pathinfo($post['url'], PATHINFO_EXTENSION);
+                                    $isVideo = in_array($fileExtension, ['mp4', 'mov', 'avi']);
+                                @endphp
+                                @if ($isVideo)
+                                    <video class="video-thumbnail" src="{{ $post['url'] }}"
+                                        poster="your-default-thumbnail.jpg" muted></video>
+                                @else
+                                    <img src="{{ $post['url'] }}" alt="Post">
+                                @endif
+                            </div>
+
+                            <!-- Post Modal -->
+                            <div class="modal fade" id="postModal{{ $post['id'] }}">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Post Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @if ($isVideo)
+                                                <video controls autoplay>
+                                                    <source src="{{ $post['url'] }}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            @else
+                                                <img src="{{ $post['url'] }}" alt="Post">
+                                            @endif
+                                            <!-- Likes and Comments -->
+                                            <div class="likes-comments">
+                                                <strong>❤️ {{ $post['likes_count'] }} Likes</strong>
+                                                <strong>💬 {{ count($post['comments']) }} Comments</strong>
+                                            </div>
+
+                                            <!-- Comments Section -->
+                                            <div class="comments">
+                                                <h6>Comments</h6>
+                                                <ul>
+                                                    @foreach ($post['comments'] as $comment)
+                                                        <li><strong>{{ App\Models\Customer::findOrFail($comment['user_id'])->name }}:</strong>
+                                                            {{ $comment['comment'] }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Followers Tab -->
+                <div id="followers" class="tab-pane fade">
+                    <ul>
+                        @foreach ($followers as $follower)
+                            <li>{{ $follower->name }} ({{ $follower->email }})</li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <!-- Following Tab -->
+                <div id="following" class="tab-pane fade">
+                    <ul>
+                        @foreach ($followings as $following)
+                            <li>{{ $following->name }} ({{ $following->email }})</li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                {{-- Wallet Tab --}}
+                <div id="wallet" class="tab-pane fade">
+                    <div class="card shadow-sm mt-3 p-4">
+                        <h4 class="mb-3">💰 Wallet Overview</h4>
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-primary text-white p-3 rounded">
+                                    <h6>Total Balance</h6>
+                                    <h3>₹{{ number_format($wallet_balance, 2) }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-success text-white p-3 rounded">
+                                    <h6>Available Balance</h6>
+                                    <h3>₹{{ number_format($available_balance, 2) }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="wallet-box bg-danger text-white p-3 rounded">
+                                    <h6>Used Balance</h6>
+                                    <h3>₹{{ number_format($used_balance, 2) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transaction History -->
+                    <div class="card shadow-sm mt-3 p-4">
+                        <h4>📜 Transaction History</h4>
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Model Type</th>
-                                        <th>Model ID</th>
-                                        <th>UUID</th>
-                                        <th>Collection</th>
-                                        <th>Name</th>
-                                        <th>File</th>
-                                        <th>MIME Type</th>
-                                        <th>Size (KB)</th>
-                                        <th>Created At</th>
-                                        <th>Preview</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($media as $item)
+                                    @foreach ($transactions as $transaction)
                                         <tr>
-                                            <td>{{ $item['id'] }}</td>
-                                            <td>{{ $item['model_type'] }}</td>
-                                            <td>{{ $item['model_id'] }}</td>
-                                            <td>{{ $item['uuid'] }}</td>
-                                            <td>{{ $item['collection_name'] }}</td>
-                                            <td>{{ $item['name'] }}</td>
-                                            <td>{{ $item['file_name'] }}</td>
-                                            <td>{{ $item['mime_type'] }}</td>
-                                            <td>{{ number_format($item['size'] / 1024, 2) }} KB</td>
-                                            <td>{{ $item['created_at'] }}</td>
                                             <td>
-                                                @if (strpos($item['mime_type'], 'image') === 0)
-                                                    <img src="{{ $item['url'] }}" width="50" height="50" class="rounded">
-                                                @elseif (strpos($item['mime_type'], 'video') === 0)
-                                                    <video width="100" controls>
-                                                        <source src="{{ $item['url'] }}" type="{{ $item['mime_type'] }}">
-                                                    </video>
+                                                @if ($transaction->transaction_type == 'credit')
+                                                    <span class="badge bg-success">+ Credit</span>
+                                                @elseif($transaction->transaction_type == 'debit')
+                                                    <span class="badge bg-danger">- Debit</span>
                                                 @else
-                                                    <a href="{{ $item['url'] }}" target="_blank">Download</a>
+                                                    <span class="badge bg-secondary">Failed</span>
                                                 @endif
+                                            </td>
+                                            <td>₹{{ number_format($transaction->amount, 2) }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($transaction->created_at)->setTimezone('Asia/Kolkata')->format('d M, Y h:i A') }}
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <h5 class="mt-4">Transaction History</h5>
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Transaction ID</th>
-                <th>Amount</th>
-                <th>Transaction Type</th>
-                <th>Status</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($customer->wallet->transactions as $transaction)
-                <tr>
-                    <td>{{ $transaction->id }}</td>
-                    <td>{{ number_format($transaction->amount, 2) }}</td>
-                    <td>{{ ucfirst($transaction->transaction_type) }}</td>
-                    <td>
-                        <span class="badge {{ $transaction->status == 'success' ? 'bg-success' : 'bg-danger' }}">
-                            {{ ucfirst($transaction->status) }}
-                        </span>
-                    </td>
-                    <td>{{ $transaction->created_at->format('Y-m-d H:i:s') }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="text-center">No transactions found</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-
                     </div>
                 </div>
-            </div>            
+            </div>
         </div>
     </div>
 @endsection

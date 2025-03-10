@@ -8,7 +8,7 @@
                 <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}"><i class="fe fe-home"></i> <span>Dashboard</span></a>
                 </li>
-                <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('user.index') || request()->routeIs('users.view') ? 'active' : '' }}">
                     <a href="{{ route('user.index') }}"><i class="fe fe-user-plus"></i> <span>Users</span></a>
                 </li>
                 <li class="{{ request()->routeIs('diamonds.index') ? 'active' : '' }}">
