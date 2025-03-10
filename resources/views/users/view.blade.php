@@ -1,5 +1,4 @@
 @extends('include.master')
-
 @section('style-area')
     <style>
         .profile-header {
@@ -129,9 +128,29 @@
         .post-item video {
             background: #000;
         }
+
+        .post-video {
+            width: 100%;
+            /* Adjust as needed */
+            max-height: 300px;
+            /* Prevents too big height */
+            object-fit: cover;
+            /* Ensures it doesn’t stretch */
+            cursor: pointer;
+        }
+
+        .mute-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
     </style>
 @endsection
-
 @section('content-area')
     <div class="page-wrapper">
         <div class="container mt-4">
@@ -205,7 +224,6 @@
                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#goldwallet">Gold Wallet</a></li>
                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#diamondwallet">Diamond Wallet</a></li>
             </ul>
-
             <div class="tab-content">
                 <!-- Posts Tab -->
                 <div id="posts" class="tab-pane fade show active">
@@ -235,10 +253,11 @@
                                         </div>
                                         <div class="modal-body">
                                             @if ($isVideo)
-                                                <video controls autoplay>
+                                                <video class="post-video" width="400" height="250" loop muted>
                                                     <source src="{{ $post['url'] }}" type="video/mp4">
                                                     Your browser does not support the video tag.
                                                 </video>
+                                                <button class="mute-btn">🔇</button>
                                             @else
                                                 <img src="{{ $post['url'] }}" alt="Post">
                                             @endif
@@ -265,7 +284,6 @@
                         @endforeach
                     </div>
                 </div>
-
                 <!-- Followers Tab -->
                 <div id="followers" class="tab-pane fade">
                     <ul>
@@ -275,17 +293,14 @@
                         @endforeach
                     </ul>
                 </div>
-
                 <!-- Following Tab -->
                 <div id="following" class="tab-pane fade">
                     <ul>
-                        {{-- @dd($followings) --}}
                         @foreach ($followings as $following)
                             <li>{{ $following['name'] }} ({{ $following['phone'] }})</li>
                         @endforeach
                     </ul>
                 </div>
-
                 {{-- Wallet Tab --}}
                 <div id="wallet" class="tab-pane fade">
                     <div class="card shadow-sm mt-3 p-4">
@@ -346,7 +361,6 @@
                         </div>
                     </div>
                 </div>
-
                 {{-- Gold Wallet Tab --}}
                 <div id="goldwallet" class="tab-pane fade">
                     <div class="card shadow-sm mt-3 p-4">
@@ -373,7 +387,6 @@
                         </div>
                     </div>
                 </div>
-
                 {{-- Diamond Wallet --}}
                 <div id="diamondwallet" class="tab-pane fade">
                     <div class="card shadow-sm mt-3 p-4">
@@ -403,4 +416,26 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script-area')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".post-video").forEach(video => {
+                video.addEventListener("click", function() {
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+
+                // Handle mute/unmute
+                let muteBtn = video.nextElementSibling;
+                muteBtn.addEventListener("click", function() {
+                    video.muted = !video.muted;
+                    muteBtn.textContent = video.muted ? "🔇" : "🔊";
+                });
+            });
+        });
+    </script>
 @endsection
