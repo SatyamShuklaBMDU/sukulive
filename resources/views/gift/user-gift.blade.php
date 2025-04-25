@@ -81,16 +81,7 @@
                                                 <td>{{ $gift->created_at }}</td>
                                                 <td>{{ $gift->sender->name }}</td>
                                                 <td><img src="{{ asset($gift->gift->image) }}" style="width: 50px;height: 50px;" alt="No Image"></td>
-                                                <td style="align-content: center !important;">
-                                                    <div class="status-toggle">
-                                                        <input type="checkbox" id="status_{{ $gift->gift->id }}"
-                                                            class="check status-switch" data-notify-id="{{ $gift->gift->id }}"
-                                                            data-status="{{ $gift->gift->is_active }}"
-                                                            {{ $gift->gift->is_active == 1 ? 'checked' : '' }} />
-                                                        <label for="status_{{ $gift->gift->id }}"
-                                                            class="checktoggle">checkbox</label>
-                                                    </div>
-                                                </td>
+                                               
                                                 <td>
                                                     {{ $gift->diamonds }}
                                                   
