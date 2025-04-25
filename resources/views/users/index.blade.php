@@ -117,7 +117,7 @@
                                                         @if ($user->giftHistory->count() > 0)
                                                             <a href="{{ route('user.gift', encrypt($user->id)) }}"
                                                                 class="btn btn-primary btn-sm" title="Gifts">
-                                                                <i class="fas fa-gift"></i>{{ $user->giftHistory->count() }}
+                                                                <i class="fas fa-gift"></i> {{ $user->giftHistory->count() }}
                                                             </a>
                                                         @else
                                                             <span class="badge badge-danger">No Gifts</span>

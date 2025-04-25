@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
 use App\Models\Gift;
+use App\Models\GiftHistory;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -86,5 +87,22 @@ class GiftController extends Controller
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => 'Failed to update status.']);
         }
+    }
+
+
+
+    public function userGift($id)
+    {
+        $id=decrypt($id);
+        $user = GiftHistory::where('receiver_id',$id)->orderBy('id','desc')->with(['receiver', 'sender'])->get();
+        if ($user->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'No gifts found.']);
+        }
+        $user->map(function ($item) {
+            $item->gift = Gift::where('id', $item->gift_id)->first();
+            return $item;
+        });
+
+        return view('gift.user-gift', compact('user'));
     }
 }

@@ -11,7 +11,7 @@ class GiftHistory extends Model
 
     protected $guarded = ["id"];
 
-    
+
     public function receiver()
     {
         return $this->belongsTo(Customer::class, 'receiver_id');
@@ -20,5 +20,11 @@ class GiftHistory extends Model
     public function sender()
     {
         return $this->belongsTo(Customer::class, 'sender_id');
+    }
+
+
+    public function gift()
+    {
+        return $this->belongsTo(Gift::class, 'gift_id');
     }
 }
