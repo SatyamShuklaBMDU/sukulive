@@ -296,7 +296,7 @@
                     <ul>
                         {{-- @dd($followers) --}}
                         @foreach ($followers as $follower)
-                            <li>{{ $follower['name'] }}</li>
+                            <li><i class="fas fa-user-check following-icon"></i> {{ $follower['name'] }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -304,7 +304,7 @@
                 <div id="following" class="tab-pane fade">
                     <ul>
                         @foreach ($followings as $following)
-                            <li>{{ $following['name'] }} ({{ $following['phone'] }})</li>
+                            <li><i class="fas fa-user-check following-icon"></i> {{ $following['name'] }}</li>
                         @endforeach
                     </ul>
                 </div>
