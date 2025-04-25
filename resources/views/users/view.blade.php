@@ -296,7 +296,7 @@
                     <ul>
                         {{-- @dd($followers) --}}
                         @foreach ($followers as $follower)
-                            <li>{{ $follower['name'] }} ({{ $follower['phone'] }})</li>
+                            <li>{{ $follower['name'] }}</li>
                         @endforeach
                     </ul>
                 </div>
