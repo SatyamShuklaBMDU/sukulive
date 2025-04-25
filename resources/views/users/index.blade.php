@@ -80,6 +80,7 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone Number</th>
+                                                <th>Gifts</th>
                                                 <th>Account Status</th>
                                                 <th>View</th>
                                             </tr>
@@ -112,6 +113,17 @@
                                                     <td>{{ $user->name }}</td>
                                                     <td>{{ $user->email }}</td>
                                                     <td>{{ $user->phone_number }}</td>
+                                                    <td>
+                                                        @if ($user->giftHistory->count() > 0)
+                                                            <a href="{{ route('user.gift', encrypt($user->id)) }}"
+                                                                class="btn btn-primary btn-sm" title="Gifts">
+                                                                <i class="fas fa-gift"></i>{{ $user->giftHistory->count() }}
+                                                            </a>
+                                                        @else
+                                                            <span class="badge badge-danger">No Gifts</span>
+                                                        @endif
+                                                    </td>
+                                                    
                                                     <td>
                                                         <div class="status-toggle">
                                                             <input type="checkbox" id="status_{{ $user->id }}"

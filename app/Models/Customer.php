@@ -66,6 +66,12 @@ class Customer extends Authenticatable implements HasMedia
     public function transactions()
     {
     return $this->hasMany(Transaction::class);
-    }  
+    } 
+    
+    
+    public function giftHistory()
+    {
+        return $this->hasMany(GiftHistory::class, 'receiver_id', 'id');
+    }
     
 }

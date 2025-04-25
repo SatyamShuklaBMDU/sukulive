@@ -10,6 +10,8 @@ class GiftHistory extends Model
     use HasFactory;
 
     protected $guarded = ["id"];
+
+    
     public function receiver()
     {
         return $this->belongsTo(Customer::class, 'receiver_id');

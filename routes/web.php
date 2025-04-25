@@ -75,6 +75,11 @@ Route::prefix("admin")->group(function () {
         Route::post('/update-gifts/{id}', [GiftController::class, 'updateStatus'])->name('update.gifts.status');
 
 
+
+        //User Gift
+        Route::get('user-gift/{id}', [GiftController::class, 'userGift'])->name('user.gift');
+
+
         //Diamonds
         Route::get('diamonds', [DiamondController::class, 'index'])->name('diamonds.index');
         Route::post('diamonds', [DiamondController::class, 'store'])->name('diamonds.store');
