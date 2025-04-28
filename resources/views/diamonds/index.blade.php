@@ -221,13 +221,13 @@
                     }
                 });
                 $.ajax({
-                    url: "{{ url('diamonds') }}/" + id + "/edit",
+                    url: "{{ url('admin/diamonds') }}/" + id + "/edit",
                     type: "GET",
                     success: function(data) {
 
                         // console.log(data);
                         // Populate the modal fields with the plan data
-                $('#diamond').val(data.diamonds);
+                        $('#diamond').val(data.diamonds);
                         $('#mrp').val(data.mrp);
                         $('#sp').val(data.selling_price);
                         $('#notid').val(data.id)
@@ -235,7 +235,7 @@
                         // Populate features
                     
                             // Show the modal
-            $('#exampleModal2').modal('show');
+                        $('#exampleModal2').modal('show');
                     },
                     error: function(error) {
                         toastr.error('Error occurred while fetching notification details.');
