@@ -36,6 +36,9 @@ class DiamondController extends Controller
 
     public function edit($id)
     {
+
+        dd($id);
+
         $plans = Diamond::findOrFail($id);
         return response()->json($plans);
     }
