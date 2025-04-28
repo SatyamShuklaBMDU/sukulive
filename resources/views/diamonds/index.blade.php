@@ -255,7 +255,7 @@
                     }
                 });
                 $.ajax({
-                    url: "{{ url('diamonds') }}/" + id,
+                    url: "{{ url('admin/diamonds') }}/" + id,
                     type: "PUT",
                     data: $(this).serialize(),
                     success: function(response) {
